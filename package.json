@@ -50,11 +50,13 @@
     "babel-jest": "^24.1.0",
     "eslint": "latest",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "latest",
-    "eslint-plugin-import": "latest",
-    "eslint-plugin-prettier": "latest",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.28.0",
+    "husky": ">=7",
     "jest": "^24.1.0",
-    "jscodeshift": "^0.6.3"
+    "jscodeshift": "^0.6.3",
+    "lint-staged": ">=10",
+    "pinst": ">=2"
   },
   "license": "MIT",
   "main": "index.js",
@@ -67,7 +69,10 @@
     "test": "jest",
     "watch": "babel --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" -w -d ./lib ./src",
     "lint": "eslint . --cache --fix",
-    "format": "prettier --cache --loglevel warn --write \"**/*.{js,css,md}\""
+    "format": "prettier --cache --loglevel warn --write \"**/*.{js,css,md}\"",
+    "postinstall": "husky install",
+    "prepublishOnly": "pinst --disable",
+    "postpublish": "pinst --enable"
   },
   "files": [
     "lib",
@@ -76,5 +81,14 @@
   "volta": {
     "node": "18.17.1",
     "yarn": "3.6.1"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --cache --fix",
+      "prettier --cache --loglevel warn --write"
+    ],
+    "*.{json,md}": [
+      "prettier --cache --loglevel warn --write"
+    ]
   }
 }
