@@ -3,9 +3,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 type CustomProps = {
-  title: string,
-}
-const Custom = (props: CustomProps) => {
+  title: string;
+};
+function Custom(props: CustomProps) {
   return (
     <div>
       <span>{props.title}</span>
@@ -13,7 +13,7 @@ const Custom = (props: CustomProps) => {
   );
 }
 
-const Component123 = () => {
+function Component123() {
   const { t } = useTranslation();
 
   return (
@@ -22,6 +22,6 @@ const Component123 = () => {
       <Custom title={t('custom_name')} />
     </div>
   );
-};
+}
 
 export default Component123;

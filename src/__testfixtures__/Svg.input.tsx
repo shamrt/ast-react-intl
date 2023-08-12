@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-const SomeIcon = () => {
+function SomeIcon() {
   return (
     <svg viewBox="0 0 40 25">
       <g>
@@ -15,6 +15,6 @@ const SomeIcon = () => {
       </g>
     </svg>
   );
-};
+}
 
 export default SomeIcon;

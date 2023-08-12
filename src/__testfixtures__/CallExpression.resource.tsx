@@ -1,5 +1,5 @@
 export default {
   translation: {
-    user_editted_successfully: `User editted successfully!`,
+    user_edited_successfully: `User edited successfully!`,
   },
 };

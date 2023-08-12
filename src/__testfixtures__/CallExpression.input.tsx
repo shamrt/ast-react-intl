@@ -1,5 +1,5 @@
 const callIt = ({ showSnackbar }) => {
-  showSnackbar({ message: 'User editted successfully!'});
+  showSnackbar({ message: 'User edited successfully!' });
 };
 
 export default callIt;

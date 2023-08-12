@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 import { useTranslation } from 'react-i18next';
 
-const Simple = ({enabled, text}) => {
+function Simple({ enabled, text }) {
   const { t } = useTranslation();
 
   return (
@@ -12,6 +12,6 @@ const Simple = ({enabled, text}) => {
       <span>{text && text}</span>
     </div>
   );
-};
+}
 
 export default Simple;

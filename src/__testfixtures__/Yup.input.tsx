@@ -1,14 +1,14 @@
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 
-const UserInnerForm = () => (
-  <span>user form here</span>
-);
+function UserInnerForm() {
+  return <span>user form here</span>;
+}
 
 type Values = {
-  name: string,
-  email: string,
-}
+  name: string;
+  email: string;
+};
 const UserForm = withFormik({
   validationSchema: yup.object().shape({
     name: yup.string().required('Name is required'),
@@ -18,7 +18,7 @@ const UserForm = withFormik({
     const { props } = formikBag;
     const { showSnackbar } = props;
 
-    showSnackbar({ message: 'User editted successfully!'});
+    showSnackbar({ message: 'User edited successfully!' });
   },
 })(UserInnerForm);
 

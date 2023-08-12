@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 
-const SiteHeader = () => {
+function SiteHeader() {
   const [text] = useState('');
-  return (
-    <span>My simple text</span>
-  );
-};
+  return <span>My simple text</span>;
+}
 
 export default SiteHeader;
