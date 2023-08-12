@@ -1,38 +1,76 @@
 # AST react-intl
 
-The objective of this tool is to make easy to migrate an existing codebase to use react-intl. It's based on [ast-i18n](https://github.com/sibelius/ast-i18n), which does the same thing for i18n. 
+The objective of this tool is to make easy to migrate an existing codebase to use i18n with [react-intl](https://formatjs.io/docs/react-intl/) ([FormatJS](https://formatjs.io/)).
 
-Note that at this point you will have to inject the `intl` object yourself, whether it's through `injectIntl` or `useIntl`. 
+It's an cleaned-up extension of [ast-react-intl](https://github.com/rwnoronha/ast-react-intl), which itself is based on [ast-i18n](https://github.com/sibelius/ast-i18n), which does the same thing for i18n.
 
-Primarily developed using AST explorer here: https://astexplorer.net/#/gist/8331e3fcd271b8977c9e189e59a9b93f/9f2fda7a8bb6a151601a64c0e6146ea29cfaaac3 - you can just copy the content of the main transformer without imports and it'll work. 
+## How it works
 
-## Usage of this codemod
+- it gets a list of files from the command line
+- it runs a babel plugin transform to find all string inside JSXText
+- it generates a stable key for the extracted strings
+- it generates i18n files format based on this map
+- it modify your existing code to use i18n library of your preference
+
+## Example
+
+Before this transform
+
+```jsx
+import React from 'react';
+
+const Simple = () => <span>My simple text</span>;
+```
+
+After this transform
+
+```jsx
+import React from 'react';
+import { withTranslation } from 'react-i18next';
+
+const Simple = ({ t }) => <span>{t('my_simple_text')}</span>;
+```
+
+## Usage of react-intl codemod
+
 ```bash
 npm i -g jscodeshift
 
 jscodeshift -t src/intlTransformerCodemod.ts PATH_TO_FILES
 ```
 
-For things that this codemod misses, you can use this VS Code snippet: 
+## How to customize denylist
 
-```
-	"Wrap with Intl": {
-        "prefix": "intl",
-		"scope": "javascript,typescript,typescriptreact,javascriptreact",
-        "body": [
-            "intl.formatMessage({",
-            "\t\t  defaultMessage: $TM_SELECTED_TEXT,",
-            "\t\t  description: '$0${1:DESCRIBE_ABOVE_TEXT_HERE}'",
-            "\t\t})"
-        ],
-        "description": "Wraps a string with intl"
-    }
-```
+Use ast.config.js to customize denylist for jsx attribute name and call expression calle
 
-Usage: 
-* Open the command palette to Configure User Snippets
-* Make a new global Snippets file, or use your existing file if you have one
-* Copy and paste this snippet into your global snippets file
-* Select the full string you want to wrap with Intl - including quotes
-* Open the command palette, select "Insert Snippet", and pick the intl snippet
-* Alternatively, hit ctrl-space and select the intl snippet
+```jsx
+module.exports = {
+  blackListJsxAttributeName: [
+    'type',
+    'id',
+    'name',
+    'children',
+    'labelKey',
+    'valueKey',
+    'labelValue',
+    'className',
+    'color',
+    'key',
+    'size',
+    'charSet',
+    'content'
+  ],
+  blackListCallExpressionCalle: [
+    't',
+    '_interopRequireDefault',
+    'require',
+    'routeTo',
+    'format',
+    'importScripts',
+    'buildPath',
+    'createLoadable',
+    'import',
+    'setFieldValue'
+  ]
+};
+```
