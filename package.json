@@ -56,13 +56,14 @@
     "jest": "^24.1.0",
     "jscodeshift": "^0.6.3",
     "lint-staged": ">=10",
-    "pinst": ">=2"
+    "pinst": ">=2",
+    "shx": "^0.3.4"
   },
   "license": "MIT",
   "main": "index.js",
   "scripts": {
     "b": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\"",
-    "build": "rm -rf lib/* && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
+    "build": "shx rm -rf lib && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
     "fixtures": "yarn start --src=fixtures",
     "prepublish": "npm run build",
     "start": "yarn b src/index.ts",
