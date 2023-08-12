@@ -2,9 +2,7 @@
   "name": "ast-i18n",
   "version": "1.0.2",
   "author": "Sibelius Seraphini <sibeliusseraphini@gmail.com> (https://github.com/sibelius)",
-  "bin": {
-    "ast-i18n": "./bin/cli"
-  },
+  "bin": "./bin/cli",
   "dependencies": {
     "ast-types": "^0.12.2",
     "cosmiconfig": "^5.1.0",
