@@ -1,8 +1,46 @@
 {
   "name": "ast-i18n",
   "version": "1.0.2",
+  "license": "MIT",
   "author": "Sibelius Seraphini <sibeliusseraphini@gmail.com> (https://github.com/sibelius)",
+  "main": "index.js",
   "bin": "./bin/cli",
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "b": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\"",
+    "build": "shx rm -rf lib && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
+    "fixtures": "yarn start --src=fixtures",
+    "format": "yarn format:base \"**/*.{js,css,md}\"",
+    "format:base": "prettier --cache --loglevel warn --write",
+    "postinstall": "husky install",
+    "lint": "yarn lint:base .",
+    "lint:base": "eslint --cache --fix",
+    "prepublishOnly": "pinst --disable",
+    "prepublish": "npm run build",
+    "postpublish": "pinst --enable",
+    "start": "yarn b src/index.ts",
+    "test": "jest",
+    "watch": "babel --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" -w -d ./lib ./src"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "yarn lint:base",
+      "yarn format:base"
+    ],
+    "*.md": [
+      "yarn format:base"
+    ],
+    "!(package).json": [
+      "yarn format:base"
+    ],
+    "package.json": [
+      "sort-package-json",
+      "yarn format:base"
+    ]
+  },
   "dependencies": {
     "ast-types": "^0.12.2",
     "cosmiconfig": "^5.1.0",
@@ -57,39 +95,11 @@
     "jscodeshift": "^0.6.3",
     "lint-staged": ">=10",
     "pinst": ">=2",
-    "shx": "^0.3.4"
+    "shx": "^0.3.4",
+    "sort-package-json": "^2.5.1"
   },
-  "license": "MIT",
-  "main": "index.js",
-  "scripts": {
-    "b": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\"",
-    "build": "shx rm -rf lib && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
-    "fixtures": "yarn start --src=fixtures",
-    "prepublish": "npm run build",
-    "start": "yarn b src/index.ts",
-    "test": "jest",
-    "watch": "babel --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" -w -d ./lib ./src",
-    "lint": "eslint . --cache --fix",
-    "format": "prettier --cache --loglevel warn --write \"**/*.{js,css,md}\"",
-    "postinstall": "husky install",
-    "prepublishOnly": "pinst --disable",
-    "postpublish": "pinst --enable"
-  },
-  "files": [
-    "lib",
-    "bin"
-  ],
   "volta": {
     "node": "18.17.1",
     "yarn": "3.6.1"
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "eslint --cache --fix",
-      "prettier --cache --loglevel warn --write"
-    ],
-    "*.{json,md}": [
-      "prettier --cache --loglevel warn --write"
-    ]
   }
 }
