@@ -19,11 +19,39 @@ import {
 } from 'jscodeshift';
 import { Collection } from 'jscodeshift/src/Collection';
 
-const getImportStatement = () =>
-  `import { FormattedMessage, useIntl, injectIntl } from 'react-intl'`;
+type ImportStatementOptions = {
+  component?: boolean;
+  hook?: boolean;
+  inject?: boolean;
+};
 
-const addI18nImport = (j: JSCodeshift, root: Collection<unknown>) => {
-  const statement = getImportStatement();
+const getImportStatement = ({
+  component = false,
+  hook = false,
+  inject = false,
+}: ImportStatementOptions = {}) => {
+  const namedImports = [];
+  if (component) {
+    namedImports.push('FormattedMessage');
+  }
+  if (hook) {
+    namedImports.push('useIntl');
+  }
+  if (inject) {
+    namedImports.push('injectIntl');
+  }
+  if (namedImports.length > 0) {
+    return `import { ${namedImports.join(', ')} } from 'react-intl';`;
+  }
+  return '';
+};
+
+const addI18nImport = (
+  j: JSCodeshift,
+  root: Collection<unknown>,
+  importStatementOptions: ImportStatementOptions,
+) => {
+  const statement = getImportStatement(importStatementOptions);
 
   const reactIntlImports = root
     .find(j.ImportDeclaration)
@@ -41,33 +69,6 @@ const addI18nImport = (j: JSCodeshift, root: Collection<unknown>) => {
     root.get().node.program.body.unshift(statement); // beginning of file
   }
 };
-
-function transform(file: FileInfo, api: API, options: Options) {
-  const j = api.jscodeshift; // alias the jscodeshift API
-  if (file.path.endsWith('.spec.js') || file.path.endsWith('.test.js')) {
-    return undefined;
-  }
-  const root = j(file.source); // parse JS code into an AST
-
-  const printOptions = options.printOptions || {
-    quote: 'single',
-    trailingComma: false,
-    lineTerminator: '\n',
-  };
-
-  let hasI18nUsage = false;
-
-  hasI18nUsage = translateJsxAttributes(j, root) || hasI18nUsage;
-  hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
-  hasI18nUsage = translatePropObjects(j, root) || hasI18nUsage;
-
-  if (hasI18nUsage) {
-    addI18nImport(j, root);
-    return root.toSource(printOptions);
-  }
-
-  return undefined;
-}
 
 const isWhitespace = (str: string) => str.trim().length === 0;
 const collapseInternalSpace = (str: string) => str.replace(/\s+/g, ' ');
@@ -321,9 +322,8 @@ function translatePropObjects(j: JSCodeshift, root: Collection<unknown>) {
       hasObjectExpression(path.value as unknown as JSXExpressionContainer),
     )
     .forEach((path) => {
-      // @ts-expect-error: TypeScript being overly strict
-      const props = (path.value.value as JSXExpressionContainer)?.expression
-        .properties;
+      const props = // @ts-expect-error: TypeScript being overly strict
+      (path.value.value as JSXExpressionContainer)?.expression.properties;
       for (let i = 0; i < props.length; i += 1) {
         if (!canHandlePropName(props[i].key.name)) {
           continue;
@@ -344,6 +344,40 @@ function translatePropObjects(j: JSCodeshift, root: Collection<unknown>) {
     });
 
   return usedTranslation;
+}
+
+/**
+ *
+ * @param file The file to transform
+ * @param api jscodeshift API
+ * @param options Options passed to the transform
+ * @returns
+ */
+function transform(file: FileInfo, api: API, options: Options) {
+  const j = api.jscodeshift; // alias the jscodeshift API
+  if (file.path.endsWith('.spec.js') || file.path.endsWith('.test.js')) {
+    return undefined;
+  }
+  const root = j(file.source); // parse JS code into an AST
+
+  const printOptions: Options = options.printOptions ?? {
+    quote: 'single',
+    trailingComma: false,
+    lineTerminator: '\n',
+  };
+
+  let hasIntlHookUsage = false;
+
+  hasIntlHookUsage = translateJsxAttributes(j, root) || hasIntlHookUsage;
+  hasIntlHookUsage = translateJsxContent(j, root) || hasIntlHookUsage;
+  hasIntlHookUsage = translatePropObjects(j, root) || hasIntlHookUsage;
+
+  if (hasIntlHookUsage) {
+    addI18nImport(j, root, { hook: hasIntlHookUsage });
+    return root.toSource(printOptions);
+  }
+
+  return undefined;
 }
 
 module.exports = transform;

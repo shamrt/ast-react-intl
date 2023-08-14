@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 function SiteHeader() {
-  const { t } = useTranslation();
+  const intl = useIntl();
   const [text] = useState('');
-  return <span>{t('my_simple_text')}</span>;
+  return (
+    <span>
+      {intl.formatMessage({
+        defaultMessage: 'My simple text',
+        description: 'DESCRIBE_ABOVE_TEXT_HERE',
+      })}
+    </span>
+  );
 }
 
 export default SiteHeader;
