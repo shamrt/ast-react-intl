@@ -1,4 +1,5 @@
-import { defineTest } from '../../test/testUtils';
+// @ts-expect-error: jscodeshift test utils are not typed
+import { defineTest } from 'jscodeshift/dist/testUtils';
 
 describe('i18nTransformerCodemod', () => {
   defineTest(__dirname, 'i18nTransformerCodemod', null, 'Classes');
