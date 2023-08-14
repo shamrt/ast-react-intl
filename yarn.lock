@@ -2224,15 +2224,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/graceful-fs@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "@types/graceful-fs@npm:4.1.2"
-  dependencies:
-    "@types/node": "*"
-  checksum: 5dba8719394fc7df902917b5789ca2c94a9d3e3d0efb39534c70abdc85d77ef149a7a08e0c37850f4a23b7ff1f6ac2e17e11c56ff0de0fa4d5536678e5fa6925
-  languageName: node
-  linkType: hard
-
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0":
   version: 2.0.3
   resolution: "@types/istanbul-lib-coverage@npm:2.0.3"
@@ -3043,7 +3034,6 @@ __metadata:
     "@types/diacritics": ^1.3.1
     "@types/eslint": ^8
     "@types/find": ^0.2.1
-    "@types/graceful-fs": ^4.1.2
     "@types/jest": ^24.0.0
     "@types/jscodeshift": ^0.11.6
     "@types/prettier": ^3
@@ -3065,7 +3055,6 @@ __metadata:
     eslint-plugin-react: ^7.33.1
     eslint-plugin-react-hooks: ^4.6.0
     find: ^0.2.9
-    graceful-fs: ^4.1.15
     husky: ">=7"
     jest: ^24.1.0
     jscodeshift: ^0.15.0
@@ -3080,8 +3069,6 @@ __metadata:
     sort-package-json: ^2.5.1
     typescript: ^5.1.6
     yargs: ^12.0.5
-  bin:
-    ast-i18n: ./bin/cli
   languageName: unknown
   linkType: soft
 
