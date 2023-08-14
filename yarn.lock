@@ -2266,13 +2266,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jscodeshift@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@types/jscodeshift@npm:0.6.0"
+"@types/jscodeshift@npm:^0.11.6":
+  version: 0.11.6
+  resolution: "@types/jscodeshift@npm:0.11.6"
   dependencies:
-    ast-types: 0.12.1
-    recast: 0.17.2
-  checksum: 43c2f8f30634c65a025257c63d23b79cd97bb7c284b5ac238a35118a3c938df7ea8fc637c81c6d85a67e5c9a37ed6eddea08fac15c0e0ac476e523999595aa0a
+    ast-types: ^0.14.1
+    recast: ^0.20.3
+  checksum: 418d34488f74e711b37fcfce5129df3494d7fd30e852b3e80ff659ef0b1a4a83911e62883a10d7e1111316b569fa91a5a6a6d22fee86c2d69db829e25b534b27
   languageName: node
   linkType: hard
 
@@ -3033,6 +3033,8 @@ __metadata:
     "@babel/preset-flow": ^7.22.5
     "@babel/preset-react": ^7.22.5
     "@babel/preset-typescript": ^7.22.5
+    "@babel/traverse": ^7.22.10
+    "@babel/types": ^7.22.10
     "@types/babel__core": ^7.20.1
     "@types/babel__generator": ^7.6.4
     "@types/babel__template": ^7.4.1
@@ -3043,7 +3045,7 @@ __metadata:
     "@types/find": ^0.2.1
     "@types/graceful-fs": ^4.1.2
     "@types/jest": ^24.0.0
-    "@types/jscodeshift": ^0.6.0
+    "@types/jscodeshift": ^0.11.6
     "@types/prettier": ^3
     "@types/react": ^18
     "@types/shelljs": ^0.8.2
@@ -3097,10 +3099,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ast-types@npm:0.12.1":
-  version: 0.12.1
-  resolution: "ast-types@npm:0.12.1"
-  checksum: 6e8bae6e05d8253ba40126eea653c2f945fc7108a33c045db13b85bad45838e52c4097737064b5e51568125c8fdbef09ed92cdd8c98676469cf6fe2874eb2bbc
+"ast-types@npm:0.14.2, ast-types@npm:^0.14.1, ast-types@npm:^0.14.2":
+  version: 0.14.2
+  resolution: "ast-types@npm:0.14.2"
+  dependencies:
+    tslib: ^2.0.1
+  checksum: 8674a77307764979f0a0b2006b7223a4b789abffaa7acbf6a1132650a799252155170173a1ff6a7fb6897f59437fc955f2707bdfc391b0797750898876e6c9ed
   languageName: node
   linkType: hard
 
@@ -3122,15 +3126,6 @@ __metadata:
   version: 0.9.6
   resolution: "ast-types@npm:0.9.6"
   checksum: 6b75831c192963453eaeaedaa9db41823cd964bfb9c40ad8da6e978393dd66611f8cc4f778ecabce6a4a9b44a04c83b2571d98fcb561b87596d7b2ea796447db
-  languageName: node
-  linkType: hard
-
-"ast-types@npm:^0.14.2":
-  version: 0.14.2
-  resolution: "ast-types@npm:0.14.2"
-  dependencies:
-    tslib: ^2.0.1
-  checksum: 8674a77307764979f0a0b2006b7223a4b789abffaa7acbf6a1132650a799252155170173a1ff6a7fb6897f59437fc955f2707bdfc391b0797750898876e6c9ed
   languageName: node
   linkType: hard
 
@@ -10014,18 +10009,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"recast@npm:0.17.2":
-  version: 0.17.2
-  resolution: "recast@npm:0.17.2"
-  dependencies:
-    ast-types: 0.12.1
-    esprima: ~4.0.0
-    private: ~0.1.5
-    source-map: ~0.6.1
-  checksum: b94b298e847dff2ffc46a0b30faa3de60cffccc10320fe278a90d2796f93b8f02856a809ff7cf3a24639d35423718a3d94914834e8cf7a85911550bb021aeb2a
-  languageName: node
-  linkType: hard
-
 "recast@npm:^0.10.10":
   version: 0.10.43
   resolution: "recast@npm:0.10.43"
@@ -10047,6 +10030,18 @@ __metadata:
     private: ~0.1.5
     source-map: ~0.5.0
   checksum: e2a6f973fa8e7f4aac6fdebd27706d67570c71d127632f15fad350a430c63b0dcdd9d7ceffad547b07114b5d28895e6fe078a287c1f8e5410c90aaa7289787ac
+  languageName: node
+  linkType: hard
+
+"recast@npm:^0.20.3":
+  version: 0.20.5
+  resolution: "recast@npm:0.20.5"
+  dependencies:
+    ast-types: 0.14.2
+    esprima: ~4.0.0
+    source-map: ~0.6.1
+    tslib: ^2.0.1
+  checksum: 14c35115cd9965950724cb2968f069a247fa79ce890643ab6dc3795c705b363f7b92a45238e9f765387c306763be9955f72047bb9d15b5d60b0a55f9e7912d5a
   languageName: node
   linkType: hard
 
