@@ -6,12 +6,10 @@ function SiteHeader() {
   const intl = useIntl();
   const [text] = useState('');
   return (
-    <span>
-      {intl.formatMessage({
-        defaultMessage: 'My simple text',
-        description: 'DESCRIBE_ABOVE_TEXT_HERE',
-      })}
-    </span>
+    <span>{intl.formatMessage({
+      defaultMessage: 'My simple text',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    })}</span>
   );
 }
 
