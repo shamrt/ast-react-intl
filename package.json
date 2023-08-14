@@ -4,7 +4,6 @@
   "license": "MIT",
   "author": "Sibelius Seraphini <sibeliusseraphini@gmail.com> (https://github.com/sibelius)",
   "main": "index.js",
-  "bin": "./bin/cli",
   "files": [
     "lib",
     "bin"
