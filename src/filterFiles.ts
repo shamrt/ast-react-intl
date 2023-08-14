@@ -9,6 +9,6 @@ export const filterFiles = (shellFind: ShellFind) => (
 ) => {
   const regex = new RegExp(ignoreFilesRegex || DEFAULT_TEST_FILE_REGEX);
   return shellFind(path).filter(
-    (path) => /\.(js|ts|tsx)$/.test(path) && !regex.test(path)
+    (_path) => /\.(js|ts|tsx)$/.test(_path) && !regex.test(_path)
   );
 };

@@ -50,3 +50,5 @@ export const getAstConfig = (): ASTConfig => {
 
   return config;
 };
+
+export default getAstConfig;

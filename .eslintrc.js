@@ -10,6 +10,14 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   root: true,
 
+  rules: {
+    'no-use-before-define': 'warn',
+    'no-continue': 'warn',
+
+    'import/extensions': 'off',
+    'import/no-import-module-exports': 'off',
+  },
+
   overrides: [
     {
       files: ['src/__testfixtures__/*.{ts,tsx}'],

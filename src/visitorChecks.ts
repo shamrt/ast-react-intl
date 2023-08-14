@@ -1,6 +1,6 @@
 import { CallExpression, JSXAttribute } from '@babel/types';
-import { NodePath } from "ast-types";
-import { JSXElement, JSXIdentifier } from "ast-types/gen/nodes";
+import { NodePath } from 'ast-types/lib/node-path';
+import { JSXElement, JSXIdentifier, ObjectProperty } from 'jscodeshift';
 import { getAstConfig } from './config';
 
 const svgElementNames = ["svg", 'path', 'g'];
@@ -16,7 +16,7 @@ export const hasStringLiteralJSXAttribute = (path: NodePath<JSXAttribute>) => {
 
   const { blackListJsxAttributeName } = getAstConfig();
 
-  if (blackListJsxAttributeName.indexOf(path.node.name.name) > -1) {
+  if (blackListJsxAttributeName.includes(path.node.name.name as string)) {
     return false;
   }
 
@@ -29,7 +29,6 @@ export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
   const { blackListCallExpressionCalle } = getAstConfig();
 
   if (callee.type === 'Identifier') {
-    const { callee } = path.node;
 
     if (blackListCallExpressionCalle.indexOf(callee.name) > -1) {
       return false;
@@ -41,7 +40,7 @@ export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
   }
 
   if (callee.type === 'MemberExpression') {
-    const { property } = path.node.callee;
+    const { property } = callee;
 
     if (property && property.type === 'Identifier' && property.name === 'required') {
       if (path.node.arguments.length === 1) {
@@ -61,6 +60,7 @@ export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
     return false;
   }
 
+  // eslint-disable-next-line no-restricted-syntax
   for (const arg of path.node.arguments) {
     // myFunc('ok')
     if (arg.type === 'StringLiteral') {
@@ -73,8 +73,9 @@ export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
         continue;
       }
 
+      // eslint-disable-next-line no-restricted-syntax
       for (const prop of arg.properties) {
-        if (prop.value && prop.value.type === 'StringLiteral') {
+        if (((prop as ObjectProperty)?.value)?.type === 'StringLiteral') {
           return true;
         }
       }
@@ -87,7 +88,7 @@ export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
 };
 
 export const isSvgElement = (path: NodePath<JSXElement>) => {
-  const jsxIdentifier = path.node.openingElement.name = path.node.openingElement.name as JSXIdentifier;
+  const jsxIdentifier = path.node.openingElement.name as JSXIdentifier;
   return svgElementNames.includes(jsxIdentifier.name);
 };
 
