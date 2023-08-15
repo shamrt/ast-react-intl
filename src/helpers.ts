@@ -1,5 +1,13 @@
 import { LiteralKind } from 'ast-types/gen/kinds';
-import { ASTPath, JSXAttribute, JSXExpressionContainer } from 'jscodeshift';
+import { NodePath } from 'ast-types/lib/node-path';
+import {
+  ASTPath,
+  Collection,
+  Function,
+  JSCodeshift,
+  JSXAttribute,
+  JSXExpressionContainer,
+} from 'jscodeshift';
 
 export const isWhitespace = (str: string) => str.trim().length === 0;
 export const collapseInternalSpace = (str: string) => str.replace(/\s+/g, ' ');
@@ -15,6 +23,7 @@ export const canHandlePropName = (name: string) => {
 
   return true;
 };
+
 export const canHandleAttribute = (attr: ASTPath<JSXAttribute>) => {
   // @ts-expect-error: Property 'name' does not exist on type 'Literal'.
   if (attr.value !== null && !canHandlePropName(attr.value?.name.name)) {
@@ -29,6 +38,7 @@ export const canHandleAttribute = (attr: ASTPath<JSXAttribute>) => {
 
   return true;
 };
+
 const looksLikeTextString = (str: string) => {
   if (!str || !str.trim) {
     return false;
@@ -50,6 +60,7 @@ const looksLikeTextString = (str: string) => {
   }
   return false;
 };
+
 const looksLikeTextPropName = (name: string) => {
   if (!name || !name.trim) {
     return false;
@@ -69,6 +80,7 @@ const looksLikeTextPropName = (name: string) => {
 
   return false;
 };
+
 export const looksLikeText = (propName: string, propValue: string) => {
   if (looksLikeTextPropName(propName)) {
     return true;
@@ -80,6 +92,7 @@ export const looksLikeText = (propName: string, propValue: string) => {
 
   return false;
 };
+
 export const attributeLooksLikeText = (attr: ASTPath<JSXAttribute>) => {
   if (!attr?.value?.name.name || !attr.value.value) {
     return false;
@@ -89,3 +102,21 @@ export const attributeLooksLikeText = (attr: ASTPath<JSXAttribute>) => {
     (attr.value.value as LiteralKind).value as string,
   );
 };
+
+export function findFunctionByIdentifier(
+  j: JSCodeshift,
+  identifier: string,
+  root: Collection<unknown>,
+) {
+  return (
+    root
+      .find(j.Function)
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      .filter((p: NodePath<Function>) => {
+        if (j.FunctionDeclaration.check(p.node)) {
+          return p.node.id?.name === identifier;
+        }
+        return p.parent.value.id && p.parent.value.id.name === identifier;
+      })
+  );
+}

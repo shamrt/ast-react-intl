@@ -24,27 +24,28 @@ import {
   hasObjectExpression,
   canHandlePropName,
   looksLikeText,
+  findFunctionByIdentifier,
 } from './helpers';
 
 type ImportStatementOptions = {
-  component?: boolean;
-  hook?: boolean;
-  inject?: boolean;
+  componentUsed?: boolean;
+  hooksUsed?: boolean;
+  injectUsed?: boolean;
 };
 
 const getImportStatement = ({
-  component = false,
-  hook = false,
-  inject = false,
+  componentUsed = false,
+  hooksUsed = false,
+  injectUsed = false,
 }: ImportStatementOptions = {}) => {
   const namedImports = [];
-  if (component) {
+  if (componentUsed) {
     namedImports.push('FormattedMessage');
   }
-  if (hook) {
+  if (hooksUsed) {
     namedImports.push('useIntl');
   }
-  if (inject) {
+  if (injectUsed) {
     namedImports.push('injectIntl');
   }
   if (namedImports.length > 0) {
@@ -181,6 +182,29 @@ function generateIntlCall(j: JSCodeshift, text: string, values: Property[]) {
   );
 }
 
+function createUseIntlCall(j: JSCodeshift) {
+  return j.variableDeclaration('const', [
+    j.variableDeclarator(
+      j.identifier('intl'),
+      j.callExpression(j.identifier('useIntl'), []),
+    ),
+  ]);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addUseHookToFunctionBody(j: JSCodeshift, functions: Collection<any>) {
+  let hookFound = false;
+  functions.forEach((n) => {
+    hookFound = true;
+    const { body } = n.node;
+    // eslint-disable-next-line no-param-reassign
+    n.node.body = j.BlockStatement.check(body)
+      ? j.blockStatement([createUseIntlCall(j), ...body.body])
+      : j.blockStatement([createUseIntlCall(j), j.returnStatement(body)]);
+  });
+  return hookFound;
+}
+
 // <span>test</span>
 function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
   let usedTranslation = false;
@@ -277,14 +301,55 @@ function transform(file: FileInfo, api: API, options: Options) {
     lineTerminator: '\n',
   };
 
-  let hasIntlHookUsage = false;
+  let hasI18nUsage = false;
 
-  hasIntlHookUsage = translateJsxAttributes(j, root) || hasIntlHookUsage;
-  hasIntlHookUsage = translateJsxContent(j, root) || hasIntlHookUsage;
-  hasIntlHookUsage = translatePropObjects(j, root) || hasIntlHookUsage;
+  hasI18nUsage = translateJsxAttributes(j, root) || hasI18nUsage;
+  hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
+  hasI18nUsage = translatePropObjects(j, root) || hasI18nUsage;
 
-  if (hasIntlHookUsage) {
-    addI18nImport(j, root, { hook: hasIntlHookUsage });
+  if (hasI18nUsage) {
+    let hooksUsed = false;
+
+    root
+      .find(j.ExportDefaultDeclaration)
+      .filter((path) => {
+        const exportDeclaration = path.node.declaration;
+        return (
+          j.Identifier.check(exportDeclaration) ||
+          j.CallExpression.check(exportDeclaration) ||
+          j.FunctionDeclaration.check(exportDeclaration)
+        );
+      })
+      .forEach((path) => {
+        const exportDeclaration = path.node.declaration;
+
+        if (j.Identifier.check(exportDeclaration)) {
+          const exportedName = exportDeclaration.name;
+          const functions = findFunctionByIdentifier(j, exportedName, root);
+
+          addUseHookToFunctionBody(j, functions);
+          hooksUsed = true;
+
+          return;
+        }
+
+        if (j.CallExpression.check(exportDeclaration)) {
+          exportDeclaration.arguments.forEach((arg) => {
+            if (j.Identifier.check(arg)) {
+              const functions = findFunctionByIdentifier(j, arg.name, root);
+              hooksUsed = addUseHookToFunctionBody(j, functions) || hooksUsed;
+            }
+          });
+        } else if (j.FunctionDeclaration.check(exportDeclaration)) {
+          hooksUsed = true;
+          exportDeclaration.body = j.blockStatement([
+            createUseIntlCall(j),
+            ...exportDeclaration.body.body,
+          ]);
+        }
+      });
+
+    addI18nImport(j, root, { hooksUsed });
     return root.toSource(printOptions);
   }
 
