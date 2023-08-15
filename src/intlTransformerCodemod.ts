@@ -310,13 +310,13 @@ function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
             // @ts-expect-error: Don't care that property 'argument' is missing in type 'CallExpression'
             // eslint-disable-next-line no-param-reassign
             arg.properties = arg.properties.map((prop: PropertyKind) => {
-              const { value } = prop;
-              if (value && value.type === 'StringLiteral') {
+              if (prop.value && prop.value.type === 'StringLiteral') {
                 hasI18nUsage = true;
                 const [newText, newValues] = getTextWithPlaceholders(j, [
-                  value,
+                  prop.value,
                 ]);
-                return generateIntlCall(j, newText, newValues);
+                // eslint-disable-next-line no-param-reassign
+                prop.value = generateIntlCall(j, newText, newValues);
               }
               return prop;
             });

@@ -1,8 +1,11 @@
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 const callIt = ({ showSnackbar }) => {
-  const { t } = useTranslation();
-  showSnackbar({ message: t('user_edited_successfully') });
+  const intl = useIntl();
+  showSnackbar({ message: intl.formatMessage({
+    defaultMessage: 'User edited successfully!',
+    description: 'DESCRIBE_ABOVE_TEXT_HERE'
+  }) });
 };
 
 export default callIt;
