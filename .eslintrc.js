@@ -1,10 +1,5 @@
 module.exports = {
-  extends: [
-    'airbnb',
-    'plugin:import/typescript',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['airbnb', 'prettier'],
   plugins: ['@typescript-eslint'],
 
   parser: '@typescript-eslint/parser',
@@ -19,6 +14,15 @@ module.exports = {
   },
 
   overrides: [
+    {
+      files: ['*.ts', '*.tsx'],
+      extends: [
+        'plugin:import/typescript',
+        'plugin:@typescript-eslint/recommended',
+        'prettier',
+      ],
+    },
+
     {
       files: ['src/__testfixtures__/*.{ts,tsx}'],
       rules: {
