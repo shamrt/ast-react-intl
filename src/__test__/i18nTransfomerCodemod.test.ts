@@ -10,7 +10,7 @@ describe('intlTransformerCodemod', () => {
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'Tsx');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'Yup');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'CallExpression');
-  // defineTest(__dirname, 'intlTransformerCodemod', null, 'Imported');
+  defineTest(__dirname, 'intlTransformerCodemod', null, 'Imported');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'WithHoc');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'NoChange');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Hooks');

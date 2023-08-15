@@ -4,3 +4,5 @@ import { useIntl } from 'react-intl';
 function Simple() {
   return <span>My simple text</span>;
 }
+
+export default Simple;
