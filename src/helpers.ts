@@ -10,6 +10,7 @@ import {
 } from 'jscodeshift';
 
 export const isWhitespace = (str: string) => str.trim().length === 0;
+
 export const collapseInternalSpace = (str: string) => str.replace(/\s+/g, ' ');
 export const hasObjectExpression = (container: JSXExpressionContainer) =>
   container?.expression?.type === 'ObjectExpression';

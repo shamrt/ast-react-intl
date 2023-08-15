@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 export default function SiteFooter() {
-  const { t } = useTranslation();
-  const [text] = useState(t('something_something'));
-  return <>
+  const intl = useIntl();
+  const [text] = useState(intl.formatMessage({
+    defaultMessage: 'Something something',
+    description: 'DESCRIBE_ABOVE_TEXT_HERE'
+  }));
+  return (<>
     {text}
-    <span>{t('my_simple_text')}</span>
-  </>;
+    <span>{intl.formatMessage({
+      defaultMessage: 'My simple text',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    })}</span>
+  </>);
 }

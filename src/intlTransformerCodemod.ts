@@ -1,7 +1,8 @@
 import { ASTNode } from 'ast-types';
-import { LiteralKind } from 'ast-types/gen/kinds';
+import { LiteralKind, PropertyKind } from 'ast-types/gen/kinds';
 import {
   API,
+  CallExpression,
   FileInfo,
   Identifier,
   JSCodeshift,
@@ -16,6 +17,7 @@ import {
   StringLiteral,
 } from 'jscodeshift';
 import { Collection } from 'jscodeshift/src/Collection';
+import { NodePath } from 'ast-types/lib/node-path';
 import {
   collapseInternalSpace,
   isWhitespace,
@@ -26,6 +28,7 @@ import {
   looksLikeText,
   findFunctionByIdentifier,
 } from './helpers';
+import { hasStringLiteralArguments } from './visitorChecks';
 
 type ImportStatementOptions = {
   componentUsed?: boolean;
@@ -281,6 +284,52 @@ function translatePropObjects(j: JSCodeshift, root: Collection<unknown>) {
   return usedTranslation;
 }
 
+// Yup.string().required('this field is required')
+// showSnackbar({ message: 'ok' })
+function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
+  let hasI18nUsage = false;
+  root
+    .find(j.CallExpression)
+    .filter(
+      (path: NodePath<CallExpression, CallExpression>) =>
+        // @ts-expect-error: Ignoring `name` not existing on some types
+        !['classNames'].includes(path.value.callee.name),
+    )
+    .filter((path: NodePath<CallExpression>) => hasStringLiteralArguments(path))
+    .forEach((path: NodePath<CallExpression, CallExpression>) => {
+      if (hasStringLiteralArguments(path)) {
+        // eslint-disable-next-line no-param-reassign
+        path.node.arguments = path.node.arguments.map((arg) => {
+          if (arg.type === 'StringLiteral' && arg.value) {
+            hasI18nUsage = true;
+            const [newText, newValues] = getTextWithPlaceholders(j, [arg]);
+            return generateIntlCall(j, newText, newValues);
+          }
+
+          if (arg.type === 'ObjectExpression') {
+            // @ts-expect-error: Don't care that property 'argument' is missing in type 'CallExpression'
+            // eslint-disable-next-line no-param-reassign
+            arg.properties = arg.properties.map((prop: PropertyKind) => {
+              const { value } = prop;
+              if (value && value.type === 'StringLiteral') {
+                hasI18nUsage = true;
+                const [newText, newValues] = getTextWithPlaceholders(j, [
+                  value,
+                ]);
+                return generateIntlCall(j, newText, newValues);
+              }
+              return prop;
+            });
+          }
+
+          return arg;
+        });
+      }
+    });
+
+  return hasI18nUsage;
+}
+
 /**
  *
  * @param file The file to transform
@@ -306,6 +355,7 @@ function transform(file: FileInfo, api: API, options: Options) {
   hasI18nUsage = translateJsxAttributes(j, root) || hasI18nUsage;
   hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
   hasI18nUsage = translatePropObjects(j, root) || hasI18nUsage;
+  hasI18nUsage = translateFunctionArguments(j, root) || hasI18nUsage;
 
   if (hasI18nUsage) {
     let hooksUsed = false;
