@@ -13,7 +13,7 @@
     "build": "shx rm -rf lib && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
     "fixtures": "yarn start --src=fixtures",
     "format": "yarn format:base \"**/*.{js,css,md}\"",
-    "format:base": "prettier --cache --loglevel warn --write",
+    "format:base": "prettier --cache --log-level warn --write",
     "postinstall": "husky install",
     "lint": "yarn lint:base .",
     "lint:base": "eslint --cache --fix",
