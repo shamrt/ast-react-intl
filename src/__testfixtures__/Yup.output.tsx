@@ -1,7 +1,7 @@
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 
-import { withTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 function UserInnerForm() {
   return <span>{t('user_form_here')}</span>;

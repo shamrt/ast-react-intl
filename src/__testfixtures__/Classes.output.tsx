@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 class MyClass extends React.Component {
   render() {

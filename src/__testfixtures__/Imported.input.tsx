@@ -1,5 +1,5 @@
 import React from 'react';
-import { withTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 function Simple() {
   return <span>My simple text</span>;
