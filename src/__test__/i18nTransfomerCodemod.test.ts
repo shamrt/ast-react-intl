@@ -2,7 +2,7 @@
 import { defineTest } from 'jscodeshift/dist/testUtils';
 
 describe('intlTransformerCodemod', () => {
-  // defineTest(__dirname, 'intlTransformerCodemod', null, 'Diacritics');
+  defineTest(__dirname, 'intlTransformerCodemod', null, 'Diacritics');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'ExpressionContainer');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Functional');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'Props');
