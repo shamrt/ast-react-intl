@@ -4,7 +4,12 @@ import * as yup from 'yup';
 import { useIntl } from 'react-intl';
 
 function UserInnerForm() {
-  return <span>{t('user_form_here')}</span>;
+  return (
+    <span>{intl.formatMessage({
+      defaultMessage: 'user form here',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    })}</span>
+  );
 }
 
 type Values = {
@@ -13,15 +18,24 @@ type Values = {
 };
 const UserForm = withFormik({
   validationSchema: yup.object().shape({
-    name: yup.string().required(t('name_is_required')),
-    email: yup.string().required(t('email_is_required')),
+    name: yup.string().required(intl.formatMessage({
+      defaultMessage: 'Name is required',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    })),
+    email: yup.string().required(intl.formatMessage({
+      defaultMessage: 'Email is required',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    })),
   }),
   handleSubmit: (values: Values, formikBag) => {
     const { props } = formikBag;
     const { showSnackbar } = props;
 
-    showSnackbar({ message: t('user_edited_successfully') });
+    showSnackbar({ message: intl.formatMessage({
+      defaultMessage: 'User edited successfully!',
+      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    }) });
   },
 })(UserInnerForm);
 
-export default withTranslation()(UserForm);
+export default UserForm;
