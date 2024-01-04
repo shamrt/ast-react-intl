@@ -10,7 +10,7 @@ export default function SiteFooter() {
   return (<>
     {text}
     <span>{intl.formatMessage({
-      defaultMessage: 'My simple text'
-    })}</span>
+        defaultMessage: 'My simple text'
+      })}</span>
   </>);
 }

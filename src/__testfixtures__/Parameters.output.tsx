@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 function SiteHeader() {
-  const { t } = useTranslation();
+  const intl = useIntl();
   const [number] = useState(42);
   return (
-    <span>
-      {t('my_simple_text', {
-        arg0: number,
-      })}
-      <span>{t('other_text')}</span>
-      {t('even_more_text')}
-    </span>
+    <span>{intl.formatMessage({
+        defaultMessage: 'My simple {number} text <span3>Other text</span3> Even more text <Link5>Link</Link5> Further text'
+      }, {
+        'number': number,
+        'span3': chunks => <span>{chunks}</span>,
+        'Link5': chunks => <Link to="/other">{chunks}</Link>
+      })}</span>
   );
 }
 

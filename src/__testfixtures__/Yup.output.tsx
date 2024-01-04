@@ -6,8 +6,8 @@ import { useIntl } from 'react-intl';
 function UserInnerForm() {
   return (
     <span>{intl.formatMessage({
-      defaultMessage: 'user form here'
-    })}</span>
+        defaultMessage: 'user form here'
+      })}</span>
   );
 }
 

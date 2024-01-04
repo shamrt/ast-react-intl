@@ -17,7 +17,7 @@ describe('intlTransformerCodemod', () => {
     'HooksInlineExport',
     'Classnames',
     'Svg',
-    // 'Parameters',
+    'Parameters',
   ];
 
   FIXTURE_FILENAMES.forEach((filename) => {

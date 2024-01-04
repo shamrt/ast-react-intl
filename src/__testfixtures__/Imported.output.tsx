@@ -5,8 +5,8 @@ function Simple() {
   const intl = useIntl();
   return (
     <span>{intl.formatMessage({
-      defaultMessage: 'My simple text'
-    })}</span>
+        defaultMessage: 'My simple text'
+      })}</span>
   );
 }
 

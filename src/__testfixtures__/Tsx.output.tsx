@@ -18,8 +18,8 @@ function Simple() {
   return (
     (<div>
       <span>{intl.formatMessage({
-        defaultMessage: 'Simple text'
-      })}</span>
+          defaultMessage: 'Simple text'
+        })}</span>
       <Custom title={intl.formatMessage({
         defaultMessage: 'Custom name'
       })} />

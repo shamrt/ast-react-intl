@@ -131,11 +131,16 @@ const getTextWithPlaceholders = (
     | LiteralKind
     | JSXFragment
   )[],
-): [string, Property[]] => {
+): [string, Property[], boolean] => {
+  let hasI18nUsage = false;
   const text: string[] = [];
   const properties: Property[] = [];
   children.forEach((child, idx) => {
     if (child.type === 'JSXText' || child.type === 'StringLiteral') {
+      if (!isWhitespace(child.value)) {
+        hasI18nUsage = true;
+      }
+
       text.push(child.value);
     } else if (child.type === 'JSXExpressionContainer') {
       const argName = generateArgName(child.expression, idx);
@@ -156,7 +161,11 @@ const getTextWithPlaceholders = (
       properties.push(...moreProps);
     }
   });
-  return [collapseInternalSpace(text.join('')).trim(), properties];
+  return [
+    collapseInternalSpace(text.join('')).trim(),
+    properties,
+    hasI18nUsage,
+  ];
 };
 
 function generateIntlCall(j: JSCodeshift, text: string, values: Property[]) {
@@ -204,8 +213,37 @@ function addUseHookToFunctionBody(j: JSCodeshift, functions: Collection<any>) {
 }
 
 // <span>test</span>
+// <span>test {value}</span>
+// <span>{predicate ? 'ok' : 'not ok'}</span>
 function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
   let usedTranslation = false;
+
+  root.find(j.JSXElement).forEach((path: NodePath<JSXElement>) => {
+    const oldChildren = path.value.children;
+    const [newText, newValues, hasI18nUsage] = getTextWithPlaceholders(
+      j,
+      oldChildren,
+    );
+    usedTranslation = usedTranslation || hasI18nUsage;
+
+    if (!hasI18nUsage) {
+      return;
+    }
+
+    const newChildren = [
+      j.jsxExpressionContainer(generateIntlCall(j, newText, newValues)),
+    ];
+    if (newChildren.length > 0) {
+      path.replace(
+        j.jsxElement(
+          path.node.openingElement,
+          path.node.closingElement,
+          newChildren,
+        ),
+      );
+    }
+  });
+
   root
     .find(j.JSXText)
     .filter((path) => !isWhitespace(path.value.value))
@@ -218,6 +256,7 @@ function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
         j.jsxExpressionContainer(generateIntlCall(j, newText, newValues)),
       ];
     });
+
   return usedTranslation;
 }
 
