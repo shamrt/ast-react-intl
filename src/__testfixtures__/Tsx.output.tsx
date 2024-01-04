@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 type CustomProps = {
   title: string;
@@ -14,13 +14,18 @@ function Custom(props: CustomProps) {
 }
 
 function Simple() {
-  const { t } = useTranslation();
-
+  const intl = useIntl();
   return (
-    <div>
-      <span>{t('simple_text')}</span>
-      <Custom title={t('custom_name')} />
-    </div>
+    (<div>
+      <span>{intl.formatMessage({
+        defaultMessage: 'Simple text',
+        description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      })}</span>
+      <Custom title={intl.formatMessage({
+        defaultMessage: 'Custom name',
+        description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      })} />
+    </div>)
   );
 }
 

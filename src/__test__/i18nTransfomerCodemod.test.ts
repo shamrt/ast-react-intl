@@ -6,7 +6,7 @@ describe('intlTransformerCodemod', () => {
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'ExpressionContainer');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Functional');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Props');
-  // defineTest(__dirname, 'intlTransformerCodemod', null, 'Tsx');
+  defineTest(__dirname, 'intlTransformerCodemod', null, 'Tsx');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Yup');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'CallExpression');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Imported');
