@@ -15,6 +15,6 @@ describe('intlTransformerCodemod', () => {
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Hooks');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'HooksInlineExport');
   defineTest(__dirname, 'intlTransformerCodemod', null, 'Classnames');
-  // defineTest(__dirname, 'intlTransformerCodemod', null, 'Svg');
+  defineTest(__dirname, 'intlTransformerCodemod', null, 'Svg');
   // defineTest(__dirname, 'intlTransformerCodemod', null, 'Parameters');
 });

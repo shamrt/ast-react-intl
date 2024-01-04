@@ -69,30 +69,24 @@ const looksLikeTextPropName = (name: string) => {
 
   const trimmed = name.trim();
   const usuallyTextPropNames = [
+    /title/,
+    /label/,
+    /alt/,
     /placeholder/,
     /text/,
     /message/,
     /cta/i,
     /msg/i,
   ];
-  if (usuallyTextPropNames.some((regex) => regex.test(trimmed))) {
-    return true;
-  }
+  const hasTextPropName = usuallyTextPropNames.some((regex) =>
+    regex.test(trimmed),
+  );
 
-  return false;
+  return hasTextPropName;
 };
 
-export const looksLikeText = (propName: string, propValue: string) => {
-  if (looksLikeTextPropName(propName)) {
-    return true;
-  }
-
-  if (looksLikeTextString(propValue)) {
-    return true;
-  }
-
-  return false;
-};
+export const looksLikeText = (propName: string, propValue: string) =>
+  looksLikeTextPropName(propName) && looksLikeTextString(propValue);
 
 export const attributeLooksLikeText = (attr: ASTPath<JSXAttribute>) => {
   if (!attr?.value?.name.name || !attr.value.value) {
