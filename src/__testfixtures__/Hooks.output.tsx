@@ -7,8 +7,7 @@ function SiteHeader() {
   const [text] = useState('');
   return (
     <span>{intl.formatMessage({
-      defaultMessage: 'My simple text',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'My simple text'
     })}</span>
   );
 }

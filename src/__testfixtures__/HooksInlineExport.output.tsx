@@ -5,14 +5,12 @@ import { useIntl } from 'react-intl';
 export default function SiteFooter() {
   const intl = useIntl();
   const [text] = useState(intl.formatMessage({
-    defaultMessage: 'Something something',
-    description: 'DESCRIBE_ABOVE_TEXT_HERE'
+    defaultMessage: 'Something something'
   }));
   return (<>
     {text}
     <span>{intl.formatMessage({
-      defaultMessage: 'My simple text',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'My simple text'
     })}</span>
   </>);
 }

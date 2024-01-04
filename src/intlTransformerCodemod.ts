@@ -164,11 +164,6 @@ function generateIntlCall(j: JSCodeshift, text: string, values: Property[]) {
   intlCallParams.push(
     j.objectExpression([
       j.property('init', j.identifier('defaultMessage'), j.literal(text)),
-      j.property(
-        'init',
-        j.identifier('description'),
-        j.literal('DESCRIBE_ABOVE_TEXT_HERE'),
-      ),
     ]),
   );
   if (values && values.length) {

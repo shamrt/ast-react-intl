@@ -18,12 +18,10 @@ function Component123() {
   return (
     (<div>
       <span>{intl.formatMessage({
-        defaultMessage: 'Simple text',
-        description: 'DESCRIBE_ABOVE_TEXT_HERE'
+        defaultMessage: 'Simple text'
       })}</span>
       <Custom title={intl.formatMessage({
-        defaultMessage: 'Custom name',
-        description: 'DESCRIBE_ABOVE_TEXT_HERE'
+        defaultMessage: 'Custom name'
       })} />
     </div>)
   );

@@ -6,8 +6,7 @@ import { useIntl } from 'react-intl';
 function UserInnerForm() {
   return (
     <span>{intl.formatMessage({
-      defaultMessage: 'user form here',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'user form here'
     })}</span>
   );
 }
@@ -19,12 +18,10 @@ type Values = {
 const UserForm = withFormik({
   validationSchema: yup.object().shape({
     name: yup.string().required(intl.formatMessage({
-      defaultMessage: 'Name is required',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'Name is required'
     })),
     email: yup.string().required(intl.formatMessage({
-      defaultMessage: 'Email is required',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'Email is required'
     })),
   }),
   handleSubmit: (values: Values, formikBag) => {
@@ -32,8 +29,7 @@ const UserForm = withFormik({
     const { showSnackbar } = props;
 
     showSnackbar({ message: intl.formatMessage({
-      defaultMessage: 'User edited successfully!',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'User edited successfully!'
     }) });
   },
 })(UserInnerForm);

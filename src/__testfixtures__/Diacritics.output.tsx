@@ -6,8 +6,7 @@ function Simple() {
   const intl = useIntl();
   return (
     <span>{intl.formatMessage({
-      defaultMessage: 'Olá Antônio',
-      description: 'DESCRIBE_ABOVE_TEXT_HERE'
+      defaultMessage: 'Olá Antônio'
     })}</span>
   );
 }
