@@ -171,15 +171,22 @@ const getTextWithPlaceholders = (
   ];
 };
 
-function generateIntlCall(j: JSCodeshift, text: string, values: Property[]) {
+/**
+ * Generates a call to `intl.formatMessage` with the given text and parameters.
+ */
+function generateIntlCall(
+  j: JSCodeshift,
+  text: string,
+  params: Property[] = [],
+) {
   const intlCallParams = [];
   intlCallParams.push(
     j.objectExpression([
       j.property('init', j.identifier('defaultMessage'), j.literal(text)),
     ]),
   );
-  if (values && values.length) {
-    intlCallParams.push(j.objectExpression(values));
+  if (params?.length) {
+    intlCallParams.push(j.objectExpression(params));
   }
   return j.callExpression(
     j.memberExpression(
