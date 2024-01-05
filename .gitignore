@@ -35,6 +35,7 @@ graphql.*.json
 junit.xml
 
 .vs
+.vscode
 
 test/globalConfig.json
 distTs
