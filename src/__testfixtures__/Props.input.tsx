@@ -23,7 +23,10 @@ function Component123() {
     <div>
       <Custom title="Custom name" />
       {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
-      <Custom placeholder={'Custom name'} />
+      <Custom
+        placeholder="Custom name"
+        data-testid={enabled ? 'test-id' : undefined}
+      />
       <img alt={enabled ? 'OK' : 'Not OK'} />
     </div>
   );

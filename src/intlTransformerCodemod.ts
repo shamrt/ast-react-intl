@@ -16,6 +16,7 @@ import {
   canHandleAttribute,
   attributeLooksLikeText,
   findFunctionByIdentifier,
+  looksLikeTextPropName,
 } from './helpers/jscodeshift';
 import { hasStringLiteralArguments } from './visitorChecks';
 import {
@@ -131,10 +132,10 @@ function translateJsxProps(j: JSCodeshift, root: Collection<unknown>) {
  * @example
  * // Before
  * <span>{bool ? 'aaa' : 'bbb'}</span>
- * <Comp name={bool ? 'aaa' : 'bbb'} />
+ * <Comp title={bool ? 'aaa' : 'bbb'} />
  * // After
  * <span>{bool ? intl.formatMessage({ defaultMessage: 'aaa' }) : intl.formatMessage({ defaultMessage: 'bbb' })}</span>
- * <Comp name={bool ? intl.formatMessage({ defaultMessage: 'aaa' }) : intl.formatMessage({ defaultMessage: 'bbb' })} />
+ * <Comp title={bool ? intl.formatMessage({ defaultMessage: 'aaa' }) : intl.formatMessage({ defaultMessage: 'bbb' })} />
  */
 function translateConditionalExpressions(
   j: JSCodeshift,
@@ -144,13 +145,16 @@ function translateConditionalExpressions(
 
   root
     .find(j.JSXExpressionContainer)
-    .filter(
-      (path: NodePath<JSXExpressionContainer>) =>
+    .filter((path: NodePath<JSXExpressionContainer>) => {
+      const isConditionalExpression =
         path.node.expression &&
-        j.ConditionalExpression.check(path.node.expression) &&
-        (j.JSXElement.check(path.parent.node) ||
-          j.JSXAttribute.check(path.parent.node)),
-    )
+        j.ConditionalExpression.check(path.node.expression);
+      const isParentElement = j.JSXElement.check(path.parent.node);
+      const isParentTextProp =
+        j.JSXAttribute.check(path.parent.node) &&
+        looksLikeTextPropName(path.parent.value?.name.name);
+      return isConditionalExpression && (isParentElement || isParentTextProp);
+    })
     // @ts-expect-error: We've just filtered for `path`s as conditional expressions
     .forEach((path: NodePath<ConditionalExpression>) => {
       const { expression } = path.value;

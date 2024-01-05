@@ -28,9 +28,12 @@ function Component123() {
         defaultMessage: 'Custom name'
       })} />
       {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
-      <Custom placeholder={intl.formatMessage({
-        defaultMessage: 'Custom name'
-      })} />
+      <Custom
+        placeholder={intl.formatMessage({
+          defaultMessage: 'Custom name'
+        })}
+        data-testid={enabled ? 'test-id' : undefined}
+      />
       <img alt={enabled ? intl.formatMessage({
         defaultMessage: 'OK'
       }) : intl.formatMessage({

@@ -74,7 +74,7 @@ const USUALLY_TEXT_PROP_NAMES = [
   /msg/i,
 ];
 
-const looksLikeTextPropName = (name: string) => {
+export const looksLikeTextPropName = (name: string) => {
   if (!name || !name.trim) {
     return false;
   }
