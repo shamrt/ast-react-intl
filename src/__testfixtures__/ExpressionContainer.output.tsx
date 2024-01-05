@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 function Simple({ enabled, text }) {
   const intl = useIntl();
@@ -14,11 +14,11 @@ function Simple({ enabled, text }) {
       <span>{text && text}</span>
     </div>
     <div>
-      <span>{intl.formatMessage({
-          defaultMessage: 'My simple text {arg1}'
-        }, {
-          'arg1': enabled ? 'OK' : 'Not OK'
-        })}</span>
+      <span><FormattedMessage
+          defaultMessage='My simple text {arg1}'
+          values={{
+            'arg1': enabled ? 'OK' : 'Not OK'
+          }} /></span>
     </div>
   </>);
 }

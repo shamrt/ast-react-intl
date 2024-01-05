@@ -1,14 +1,9 @@
 import React from 'react';
 
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 function Simple() {
-  const intl = useIntl();
-  return (
-    <span>{intl.formatMessage({
-        defaultMessage: 'My simple text'
-      })}</span>
-  );
+  return <span><FormattedMessage defaultMessage='My simple text' /></span>;
 }
 
 export default Simple;

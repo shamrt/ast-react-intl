@@ -24,6 +24,7 @@ import {
   addUseHookToFunctionBody,
   createUseIntlCall,
   addI18nImport,
+  generateFormattedMessageComponent,
 } from './helpers/formatjs';
 
 /**
@@ -34,8 +35,8 @@ import {
  * <span>test</span>
  * <span>test {value}</span>
  * // After
- * <span>{intl.formatMessage({ defaultMessage: 'test' })}</span>
- * <span>{intl.formatMessage({ defaultMessage: 'test {value}' }, { value })}</span>
+ * <span><FormattedMessage defaultMessage="test" /></span>
+ * <span><FormattedMessage defaultMessage="test {value}" values={{ value }} /></span>
  */
 function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
   let usedTranslation = false;
@@ -52,15 +53,15 @@ function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
       return;
     }
 
-    const newChildren = [
-      j.jsxExpressionContainer(generateIntlCall(j, newText, newValues)),
+    const newComponent = [
+      generateFormattedMessageComponent(j, newText, newValues),
     ];
-    if (newChildren.length > 0) {
+    if (newComponent.length > 0) {
       path.replace(
         j.jsxElement(
           path.node.openingElement,
           path.node.closingElement,
-          newChildren,
+          newComponent,
         ),
       );
     }
@@ -241,15 +242,21 @@ function transform(file: FileInfo, api: API, options: Options) {
   };
 
   let hasI18nUsage = false;
+  let hooksUsed = false;
 
-  hasI18nUsage = translateJsxProps(j, root) || hasI18nUsage;
-  hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
-  hasI18nUsage = translateConditionalExpressions(j, root) || hasI18nUsage;
-  hasI18nUsage = translateFunctionArguments(j, root) || hasI18nUsage;
+  hooksUsed = translateJsxProps(j, root);
+  hasI18nUsage = hooksUsed || hasI18nUsage;
+
+  const componentUsed = translateJsxContent(j, root);
+  hasI18nUsage = componentUsed || hasI18nUsage;
+
+  hooksUsed =
+    translateConditionalExpressions(j, root) ||
+    translateFunctionArguments(j, root) ||
+    hooksUsed;
+  hasI18nUsage = hooksUsed || hasI18nUsage;
 
   if (hasI18nUsage) {
-    let hooksUsed = false;
-
     root
       .find(j.ExportDefaultDeclaration)
       .filter((path) => {
@@ -267,9 +274,9 @@ function transform(file: FileInfo, api: API, options: Options) {
           const exportedName = exportDeclaration.name;
           const functions = findFunctionByIdentifier(j, exportedName, root);
 
-          addUseHookToFunctionBody(j, functions);
-          hooksUsed = true;
-
+          if (hooksUsed) {
+            addUseHookToFunctionBody(j, functions);
+          }
           return;
         }
 
@@ -277,11 +284,13 @@ function transform(file: FileInfo, api: API, options: Options) {
           exportDeclaration.arguments.forEach((arg) => {
             if (j.Identifier.check(arg)) {
               const functions = findFunctionByIdentifier(j, arg.name, root);
-              hooksUsed = addUseHookToFunctionBody(j, functions) || hooksUsed;
+
+              if (hooksUsed) {
+                addUseHookToFunctionBody(j, functions);
+              }
             }
           });
         } else if (j.FunctionDeclaration.check(exportDeclaration)) {
-          hooksUsed = true;
           exportDeclaration.body = j.blockStatement([
             createUseIntlCall(j),
             ...exportDeclaration.body.body,
@@ -289,7 +298,7 @@ function transform(file: FileInfo, api: API, options: Options) {
         }
       });
 
-    addI18nImport(j, root, { hooksUsed });
+    addI18nImport(j, root, { hooksUsed, componentUsed });
     return root.toSource(printOptions);
   }
 

@@ -191,6 +191,32 @@ export function generateIntlCall(
   );
 }
 
+/**
+ * Generate a `FormattedMessage` component with the given text and parameters.
+ */
+export function generateFormattedMessageComponent(
+  j: JSCodeshift,
+  text: string,
+  params: Property[] = [],
+) {
+  const props = [
+    j.jsxAttribute(j.jsxIdentifier('defaultMessage'), j.stringLiteral(text)),
+  ];
+  if (params?.length) {
+    props.push(
+      j.jsxAttribute(
+        j.jsxIdentifier('values'),
+        j.jsxExpressionContainer(j.objectExpression(params)),
+      ),
+    );
+  }
+  return j.jsxElement(
+    j.jsxOpeningElement(j.jsxIdentifier('FormattedMessage'), props, true),
+    null,
+    [],
+  );
+}
+
 /** Creates a `const intl = useIntl()` statement. */
 export function createUseIntlCall(j: JSCodeshift) {
   return j.variableDeclaration('const', [

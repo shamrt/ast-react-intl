@@ -2,14 +2,10 @@
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 function UserInnerForm() {
-  return (
-    <span>{intl.formatMessage({
-        defaultMessage: 'user form here'
-      })}</span>
-  );
+  return <span><FormattedMessage defaultMessage='user form here' /></span>;
 }
 
 type Values = {

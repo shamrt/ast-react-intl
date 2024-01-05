@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function SiteFooter() {
   const intl = useIntl();
@@ -9,8 +9,6 @@ export default function SiteFooter() {
   }));
   return (<>
     {text}
-    <span>{intl.formatMessage({
-        defaultMessage: 'My simple text'
-      })}</span>
+    <span><FormattedMessage defaultMessage='My simple text' /></span>
   </>);
 }
