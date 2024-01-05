@@ -26,9 +26,13 @@ After this transform
 
 ```jsx
 import React from 'react';
-import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
-const Simple = ({ t }) => <span>{t('my_simple_text')}</span>;
+const Simple = () => (
+  <span>
+    <FormattedMessage id="simple" defaultMessage="My simple text" />
+  </span>
+);
 ```
 
 ## Usage of react-intl codemod
