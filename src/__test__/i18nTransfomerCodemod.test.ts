@@ -3,21 +3,21 @@ import { defineTest } from 'jscodeshift/dist/testUtils';
 
 describe('intlTransformerCodemod', () => {
   const FIXTURE_FILENAMES = [
+    'CallExpression',
+    'Classnames',
     'Diacritics',
     'ExpressionContainer',
     'Functional',
-    'Props',
-    'Tsx',
-    'Yup',
-    'CallExpression',
-    'Imported',
-    'WithHoc',
-    'NoChange',
     'Hooks',
     'HooksInlineExport',
-    'Classnames',
-    'Svg',
+    'Imported',
+    'NoChange',
     'Parameters',
+    'Props',
+    'Svg',
+    'Tsx',
+    'WithHoc',
+    'Yup',
   ];
 
   FIXTURE_FILENAMES.forEach((filename) => {
