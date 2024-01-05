@@ -113,7 +113,9 @@ function translateJsxProps(j: JSCodeshift, root: Collection<unknown>) {
     .find(j.JSXExpressionContainer)
     .filter(
       (path: NodePath<JSXExpressionContainer>) =>
-        path.node.expression && j.StringLiteral.check(path.node.expression),
+        path.node.expression &&
+        j.StringLiteral.check(path.node.expression) &&
+        !isWhitespace(path.node.expression.value),
     )
     .forEach((path) => {
       hasI18nUsage = true;

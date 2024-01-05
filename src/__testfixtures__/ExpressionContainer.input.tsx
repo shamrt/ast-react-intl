@@ -8,7 +8,7 @@ function Simple({ enabled, text }) {
         <span>{enabled ? 'OK' : null}</span>
         <span>{enabled ? null : 'Not OK'}</span>
         <span>{text && text}</span>
-      </div>
+      </div>{' '}
       <div>
         <span>My simple text {enabled ? 'OK' : 'Not OK'}</span>
       </div>

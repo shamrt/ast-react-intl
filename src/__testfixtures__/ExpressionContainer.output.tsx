@@ -18,7 +18,7 @@ function Simple({ enabled, text }) {
         defaultMessage: 'Not OK'
       })}</span>
       <span>{text && text}</span>
-    </div>
+    </div>{' '}
     <div>
       <span><FormattedMessage
           defaultMessage='My simple text {arg1}'
