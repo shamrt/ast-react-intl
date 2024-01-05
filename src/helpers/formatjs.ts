@@ -200,6 +200,8 @@ export function createUseIntlCall(j: JSCodeshift) {
     ),
   ]);
 }
+
+/** Adds `useIntl` hook statement to the top of a function body. */
 export function addUseHookToFunctionBody(
   j: JSCodeshift,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
