@@ -34,6 +34,7 @@ type ImportStatementOptions = {
   injectUsed?: boolean;
 };
 
+/** Returns an import statement for react-intl. */
 const getImportStatement = ({
   componentUsed = false,
   hooksUsed = false,
@@ -55,6 +56,7 @@ const getImportStatement = ({
   return '';
 };
 
+/** Adds an import statement for react-intl. */
 const addI18nImport = (
   j: JSCodeshift,
   root: Collection<unknown>,
@@ -79,6 +81,7 @@ const addI18nImport = (
   }
 };
 
+/** Generates a safe parameter name in a FormatJS message descriptor. */
 const generateArgName = (expression: ASTNode, idx: number): string => {
   if (expression.type === 'Identifier') {
     return (expression as Identifier).name;
@@ -89,6 +92,7 @@ const generateArgName = (expression: ASTNode, idx: number): string => {
   return `arg${idx}`;
 };
 
+/** Generates a safe tag name for a FormatJS message descriptor. */
 const generateTagName = (element: JSXElement, idx: number): string => {
   if ((element?.openingElement?.name as JSXIdentifier).name) {
     return (element.openingElement.name as JSXIdentifier).name + idx;
@@ -97,12 +101,14 @@ const generateTagName = (element: JSXElement, idx: number): string => {
   return `tag${idx}`;
 };
 
+/** Generates a simple property for a FormatJS message descriptor. */
 const generateArgProps = (
   j: JSCodeshift,
   expression: JSXExpressionContainer,
   argName: string,
 ): Property => j.property('init', j.literal(argName), expression);
 
+/** Generates an arrow function property for a FormatJS message descriptor. */
 const generateTagProps = (
   j: JSCodeshift,
   element: JSXElement,
@@ -119,6 +125,7 @@ const generateTagProps = (
   return j.property('init', j.literal(tagName), arrowFn);
 };
 
+/** Returns the text content of a JSX element with placeholders for parameters. */
 const getTextWithPlaceholders = (
   j: JSCodeshift,
   children: (
@@ -197,6 +204,7 @@ function generateIntlCall(
   );
 }
 
+/** Creates a `const intl = useIntl()` statement. */
 function createUseIntlCall(j: JSCodeshift) {
   return j.variableDeclaration('const', [
     j.variableDeclarator(
