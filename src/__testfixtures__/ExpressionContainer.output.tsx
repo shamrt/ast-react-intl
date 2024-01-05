@@ -11,6 +11,12 @@ function Simple({ enabled, text }) {
       }) : intl.formatMessage({
         defaultMessage: 'Not OK'
       })}</span>
+      <span>{enabled ? intl.formatMessage({
+        defaultMessage: 'OK'
+      }) : null}</span>
+      <span>{enabled ? null : intl.formatMessage({
+        defaultMessage: 'Not OK'
+      })}</span>
       <span>{text && text}</span>
     </div>
     <div>

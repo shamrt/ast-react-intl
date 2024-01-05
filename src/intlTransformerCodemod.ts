@@ -154,12 +154,12 @@ function translateConditionalExpressions(
     // @ts-expect-error: We've just filtered for `path`s as conditional expressions
     .forEach((path: NodePath<ConditionalExpression>) => {
       const { expression } = path.value;
-      if (j.Literal.check(expression.consequent)) {
+      if (j.StringLiteral.check(expression.consequent)) {
         hasI18nUsage = true;
         const text = expression.consequent.value;
         expression.consequent = generateIntlCall(j, text);
       }
-      if (j.Literal.check(expression.alternate)) {
+      if (j.StringLiteral.check(expression.alternate)) {
         hasI18nUsage = true;
         const text = expression.alternate.value;
         expression.alternate = generateIntlCall(j, text);

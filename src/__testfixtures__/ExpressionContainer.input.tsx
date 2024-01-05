@@ -5,6 +5,8 @@ function Simple({ enabled, text }) {
     <>
       <div>
         <span>{enabled ? 'OK' : 'Not OK'}</span>
+        <span>{enabled ? 'OK' : null}</span>
+        <span>{enabled ? null : 'Not OK'}</span>
         <span>{text && text}</span>
       </div>
       <div>
