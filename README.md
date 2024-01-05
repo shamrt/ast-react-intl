@@ -49,7 +49,7 @@ Use ast.config.js to customize denylist for jsx attribute name and call expressi
 
 ```jsx
 module.exports = {
-  blackListJsxAttributeName: [
+  denylistJsxAttributeName: [
     'type',
     'id',
     'name',
@@ -64,7 +64,7 @@ module.exports = {
     'charSet',
     'content'
   ],
-  blackListCallExpressionCalle: [
+  denylistCallExpressionCalle: [
     't',
     '_interopRequireDefault',
     'require',

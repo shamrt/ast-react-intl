@@ -19,9 +19,9 @@ export const hasStringLiteralJSXAttribute = (path: NodePath<JSXAttribute>) => {
     return false;
   }
 
-  const { blackListJsxAttributeName } = getAstConfig();
+  const { denylistJsxAttributeName } = getAstConfig();
 
-  if (blackListJsxAttributeName.includes(path.node.name.name as string)) {
+  if (denylistJsxAttributeName.includes(path.node.name.name as string)) {
     return false;
   }
 
@@ -31,10 +31,10 @@ export const hasStringLiteralJSXAttribute = (path: NodePath<JSXAttribute>) => {
 export const hasStringLiteralArguments = (path: NodePath<CallExpression>) => {
   const { callee } = path.node;
 
-  const { blackListCallExpressionCalle } = getAstConfig();
+  const { denylistCallExpressionCalle } = getAstConfig();
 
   if (callee.type === 'Identifier') {
-    if (blackListCallExpressionCalle.indexOf(callee.name) > -1) {
+    if (denylistCallExpressionCalle.indexOf(callee.name) > -1) {
       return false;
     }
   }

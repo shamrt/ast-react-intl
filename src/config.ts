@@ -3,12 +3,12 @@ import cosmiconfig from 'cosmiconfig';
 const explorer = cosmiconfig('ast');
 
 type ASTConfig = {
-  blackListJsxAttributeName: string[],
-  blackListCallExpressionCalle: string[],
-}
+  denylistJsxAttributeName: string[];
+  denylistCallExpressionCalle: string[];
+};
 
 const defaultConfig: ASTConfig = {
-  blackListJsxAttributeName: [
+  denylistJsxAttributeName: [
     'type',
     'id',
     'name',
@@ -18,7 +18,7 @@ const defaultConfig: ASTConfig = {
     'labelValue',
     'className',
   ],
-  blackListCallExpressionCalle: [
+  denylistCallExpressionCalle: [
     't',
     '_interopRequireDefault',
     'require',
