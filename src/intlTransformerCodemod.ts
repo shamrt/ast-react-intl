@@ -18,6 +18,7 @@ import {
   attributeLooksLikeText,
   findFunctionByIdentifier,
   looksLikeTextPropName,
+  looksLikeTextString,
 } from './helpers/jscodeshift';
 import { hasStringLiteralArguments } from './visitorChecks';
 import {
@@ -201,7 +202,11 @@ function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
     .forEach((path: NodePath<CallExpression, CallExpression>) => {
       // eslint-disable-next-line no-param-reassign
       path.node.arguments = path.node.arguments.map((arg) => {
-        if (j.StringLiteral.check(arg) && arg.value) {
+        if (
+          j.StringLiteral.check(arg) &&
+          arg.value &&
+          looksLikeTextString(arg.value)
+        ) {
           hasI18nUsage = true;
           const [newText, newValues] = getTextWithPlaceholders(j, [arg]);
           return generateIntlCall(j, newText, newValues);

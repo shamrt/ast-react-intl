@@ -8,6 +8,7 @@ describe('intlTransformerCodemod', () => {
     'Diacritics',
     'ExpressionContainer',
     'Functional',
+    'FunctionArguments',
     'Hooks',
     'HooksInlineExport',
     'Imported',

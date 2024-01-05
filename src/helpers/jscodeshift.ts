@@ -40,7 +40,7 @@ export const canHandleAttribute = (attr: ASTPath<JSXAttribute>) => {
   return true;
 };
 
-const looksLikeTextString = (str: string) => {
+export const looksLikeTextString = (str: string) => {
   if (!str || !str.trim) {
     return false;
   }
