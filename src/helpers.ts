@@ -62,23 +62,25 @@ const looksLikeTextString = (str: string) => {
   return false;
 };
 
+const USUALLY_TEXT_PROP_NAMES = [
+  /title/,
+  /label/,
+  /alt/,
+  /description/,
+  /placeholder/,
+  /text/,
+  /message/,
+  /cta/i,
+  /msg/i,
+];
+
 const looksLikeTextPropName = (name: string) => {
   if (!name || !name.trim) {
     return false;
   }
 
   const trimmed = name.trim();
-  const usuallyTextPropNames = [
-    /title/,
-    /label/,
-    /alt/,
-    /placeholder/,
-    /text/,
-    /message/,
-    /cta/i,
-    /msg/i,
-  ];
-  const hasTextPropName = usuallyTextPropNames.some((regex) =>
+  const hasTextPropName = USUALLY_TEXT_PROP_NAMES.some((regex) =>
     regex.test(trimmed),
   );
 
