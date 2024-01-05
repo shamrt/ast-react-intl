@@ -1,3 +1,4 @@
+// TODO: This output could be improved by using an `injectIntl` HOC
 import { withFormik } from 'formik';
 import * as yup from 'yup';
 
