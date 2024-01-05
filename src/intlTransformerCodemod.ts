@@ -26,9 +26,17 @@ import {
   addI18nImport,
 } from './helpers/formatjs';
 
-// <span>test</span>
-// <span>test {value}</span>
-// <span>{predicate ? 'ok' : 'not ok'}</span>
+/**
+ * Translates simple JSX content.
+ *
+ * @example
+ * // Before
+ * <span>test</span>
+ * <span>test {value}</span>
+ * // After
+ * <span>{intl.formatMessage({ defaultMessage: 'test' })}</span>
+ * <span>{intl.formatMessage({ defaultMessage: 'test {value}' }, { value })}</span>
+ */
 function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
   let usedTranslation = false;
 
@@ -116,8 +124,17 @@ function translateJsxProps(j: JSCodeshift, root: Collection<unknown>) {
   return hasI18nUsage;
 }
 
-// <span>{bool ? 'aaa' : 'bbb'}</span>
-// <Comp name={bool ? 'aaa' : 'bbb'} />
+/**
+ * Translates conditional expressions that are used as JSX content.
+ *
+ * @example
+ * // Before
+ * <span>{bool ? 'aaa' : 'bbb'}</span>
+ * <Comp name={bool ? 'aaa' : 'bbb'} />
+ * // After
+ * <span>{bool ? intl.formatMessage({ defaultMessage: 'aaa' }) : intl.formatMessage({ defaultMessage: 'bbb' })}</span>
+ * <Comp name={bool ? intl.formatMessage({ defaultMessage: 'aaa' }) : intl.formatMessage({ defaultMessage: 'bbb' })} />
+ */
 function translateConditionalExpressions(
   j: JSCodeshift,
   root: Collection<unknown>,
@@ -151,8 +168,17 @@ function translateConditionalExpressions(
   return hasI18nUsage;
 }
 
-// Yup.string().required('this field is required')
-// showSnackbar({ message: 'ok' })
+/**
+ * Translates function arguments that are strings.
+ *
+ * @example
+ * // Before
+ * Yup.string().required('this field is required')
+ * showSnackbar({ message: 'ok' })
+ * // After
+ * Yup.string().required(intl.formatMessage({ defaultMessage: 'this field is required' }))
+ * showSnackbar({ message: intl.formatMessage({ defaultMessage: 'ok' }) })
+ */
 function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
   let hasI18nUsage = false;
 
