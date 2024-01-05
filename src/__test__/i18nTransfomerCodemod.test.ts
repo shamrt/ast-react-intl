@@ -13,6 +13,7 @@ describe('intlTransformerCodemod', () => {
     'Imported',
     'NoChange',
     'Parameters',
+    'PreExistingI18n',
     'Props',
     'Svg',
     'Tsx',

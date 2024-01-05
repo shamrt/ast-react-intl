@@ -2,6 +2,7 @@ import { ASTNode } from 'ast-types';
 import { LiteralKind } from 'ast-types/gen/kinds';
 import {
   Identifier,
+  ImportDeclaration,
   JSCodeshift,
   JSXElement,
   JSXExpressionContainer,
@@ -21,22 +22,27 @@ type ImportStatementOptions = {
   injectUsed?: boolean;
 };
 
-/** Returns an import statement for react-intl. */
-const getImportStatement = ({
+/** Returns import specifiers for react-intl. */
+const getAddedImportSpecifiers = ({
   componentUsed = false,
   hooksUsed = false,
   injectUsed = false,
 }: ImportStatementOptions = {}) => {
-  const namedImports = [];
+  const specifiers = [];
   if (componentUsed) {
-    namedImports.push('FormattedMessage');
+    specifiers.push('FormattedMessage');
   }
   if (hooksUsed) {
-    namedImports.push('useIntl');
+    specifiers.push('useIntl');
   }
   if (injectUsed) {
-    namedImports.push('injectIntl');
+    specifiers.push('injectIntl');
   }
+  return specifiers;
+};
+
+/** Returns an import statement for react-intl. */
+const generateImportStatement = (namedImports: string[]) => {
   if (namedImports.length > 0) {
     return `import { ${namedImports.join(', ')} } from 'react-intl';`;
   }
@@ -49,19 +55,38 @@ export const addI18nImport = (
   root: Collection<unknown>,
   importStatementOptions: ImportStatementOptions,
 ) => {
-  const statement = getImportStatement(importStatementOptions);
-
-  const reactIntlImports = root
-    .find(j.ImportDeclaration)
-    .filter((path) => path.node.source.value === 'react-intl');
+  const imports = root.find(j.ImportDeclaration);
+  const reactIntlImports = imports.filter(
+    (path) => path.node.source.value === 'react-intl',
+  );
+  const addedSpecifiers = getAddedImportSpecifiers(importStatementOptions);
 
   if (reactIntlImports.length > 0) {
+    const existingImport = reactIntlImports.at(0).get();
+    const existingSpecifiers = (
+      (existingImport.value as ImportDeclaration).specifiers
+        ?.map((specifier) => specifier.local?.name)
+        .filter(Boolean) as string[]
+    ).filter(
+      (existingSpecifier) => !addedSpecifiers.includes(existingSpecifier),
+    );
+
+    if (existingSpecifiers.length === 0) {
+      return;
+    }
+
+    const statement = generateImportStatement([
+      ...existingSpecifiers,
+      ...addedSpecifiers,
+    ]);
+    reactIntlImports.at(0).replaceWith(statement);
+
     return;
   }
 
-  const imports = root.find(j.ImportDeclaration);
-
+  const statement = generateImportStatement(addedSpecifiers);
   if (imports.length > 0) {
+    reactIntlImports.remove();
     j(imports.at(imports.length - 1).get()).insertAfter(statement); // after the imports
   } else {
     root.get().node.program.body.unshift(statement); // beginning of file
