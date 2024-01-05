@@ -136,13 +136,16 @@ const getTextWithPlaceholders = (
   const text: string[] = [];
   const properties: Property[] = [];
   children.forEach((child, idx) => {
-    if (child.type === 'JSXText' || child.type === 'StringLiteral') {
+    if (j.JSXText.check(child) || j.StringLiteral.check(child)) {
       if (!isWhitespace(child.value)) {
         hasI18nUsage = true;
       }
 
       text.push(child.value);
-    } else if (child.type === 'JSXExpressionContainer') {
+    } else if (
+      j.JSXExpressionContainer.check(child) &&
+      !j.JSXEmptyExpression.check(child.expression)
+    ) {
       const argName = generateArgName(child.expression, idx);
       const placeholderProps = generateArgProps(
         j,
@@ -151,7 +154,7 @@ const getTextWithPlaceholders = (
       );
       text.push(`{${argName}}`);
       properties.push(placeholderProps);
-    } else if (child.type === 'JSXElement') {
+    } else if (j.JSXElement.check(child)) {
       const tagName = generateTagName(child, idx);
       const tagProps = generateTagProps(j, child, tagName);
       // @ts-expect-error: TypeScript thinks `children` is undefined, but that's wrong
