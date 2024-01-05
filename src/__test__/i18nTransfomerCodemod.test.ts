@@ -11,7 +11,7 @@ describe('intlTransformerCodemod', () => {
     'Yup',
     'CallExpression',
     'Imported',
-    // 'WithHoc',
+    'WithHoc',
     'NoChange',
     'Hooks',
     'HooksInlineExport',

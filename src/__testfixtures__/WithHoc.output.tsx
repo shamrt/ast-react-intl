@@ -1,11 +1,15 @@
 import React from 'react';
 import { withSnackbar } from 'snackbar';
 
-import { useTranslation } from 'react-i18next';
+import { useIntl } from 'react-intl';
 
 function Simple() {
-  const { t } = useTranslation();
-  return <span>{t('my_simple_text')}</span>;
+  const intl = useIntl();
+  return (
+    <span>{intl.formatMessage({
+        defaultMessage: 'My simple text'
+      })}</span>
+  );
 }
 
 export default withSnackbar(Simple);
