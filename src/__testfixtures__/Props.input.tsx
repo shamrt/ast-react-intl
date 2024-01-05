@@ -1,21 +1,30 @@
 import React from 'react';
 
 type CustomProps = {
-  title: string;
+  title?: string;
+  placeholder?: string;
 };
-function Custom(props: CustomProps) {
+function Custom({ title, placeholder }: CustomProps) {
   return (
     <div>
-      <span>{props.title}</span>
+      <span>{title}</span>
+      <input type="text" placeholder={placeholder} />
     </div>
   );
 }
+Custom.defaultProps = {
+  title: 'Foo',
+  placeholder: 'Bar',
+};
 
 function Component123() {
+  const enabled = true;
   return (
     <div>
-      <span>Simple text</span>
       <Custom title="Custom name" />
+      {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
+      <Custom placeholder={'Custom name'} />
+      {/* <img alt={enabled ? 'OK' : 'Not OK'} /> */}
     </div>
   );
 }

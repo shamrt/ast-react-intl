@@ -23,9 +23,6 @@ import {
   isWhitespace,
   canHandleAttribute,
   attributeLooksLikeText,
-  hasObjectExpression,
-  canHandlePropName,
-  looksLikeText,
   findFunctionByIdentifier,
 } from './helpers';
 import { hasStringLiteralArguments } from './visitorChecks';
@@ -270,8 +267,8 @@ function translateJsxContent(j: JSCodeshift, root: Collection<unknown>) {
   return usedTranslation;
 }
 
-function translateJsxAttributes(j: JSCodeshift, root: Collection<unknown>) {
-  let usedTranslation = false;
+function translateJsxProps(j: JSCodeshift, root: Collection<unknown>) {
+  let hasI18nUsage = false;
   root
     .find(j.JSXAttribute)
     .filter((path) => canHandleAttribute(path) && attributeLooksLikeText(path))
@@ -282,7 +279,7 @@ function translateJsxAttributes(j: JSCodeshift, root: Collection<unknown>) {
         return;
       }
 
-      usedTranslation = true;
+      hasI18nUsage = true;
       const callExpression = j.jsxExpressionContainer(
         generateIntlCall(j, text, params),
       );
@@ -293,39 +290,23 @@ function translateJsxAttributes(j: JSCodeshift, root: Collection<unknown>) {
       }
     });
 
-  return usedTranslation;
-}
-
-function translatePropObjects(j: JSCodeshift, root: Collection<unknown>) {
-  let usedTranslation = false;
+  // <Comp name={'Awesome'} />
   root
-    .find(j.JSXAttribute)
-    .filter((path) =>
-      hasObjectExpression(path.value as unknown as JSXExpressionContainer),
+    .find(j.JSXExpressionContainer)
+    .filter(
+      (path: NodePath<JSXExpressionContainer>) =>
+        path.node.expression && j.StringLiteral.check(path.node.expression),
     )
     .forEach((path) => {
-      const props = // @ts-expect-error: TypeScript being overly strict
-        (path.value.value as JSXExpressionContainer)?.expression.properties;
-      for (let i = 0; i < props.length; i += 1) {
-        if (!canHandlePropName(props[i].key.name)) {
-          continue;
-        }
+      hasI18nUsage = true;
 
-        if (!looksLikeText(props[i].key.name, props[i].value.value)) {
-          continue;
-        }
-
-        const [text, params] = getTextWithPlaceholders(j, [props[i].value]);
-        if ((text || '').trim().length === 0) {
-          continue;
-        }
-        usedTranslation = true;
-        const callExpression = generateIntlCall(j, text, params);
-        props[i].value = callExpression;
-      }
+      // @ts-expect-error: TypeScript thinks `expression` has no `value` property, but that's wrong
+      const text = path.node.expression.value;
+      // eslint-disable-next-line no-param-reassign
+      path.node.expression = generateIntlCall(j, text);
     });
 
-  return usedTranslation;
+  return hasI18nUsage;
 }
 
 // Yup.string().required('this field is required')
@@ -396,9 +377,8 @@ function transform(file: FileInfo, api: API, options: Options) {
 
   let hasI18nUsage = false;
 
-  hasI18nUsage = translateJsxAttributes(j, root) || hasI18nUsage;
+  hasI18nUsage = translateJsxProps(j, root) || hasI18nUsage;
   hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
-  hasI18nUsage = translatePropObjects(j, root) || hasI18nUsage;
   hasI18nUsage = translateFunctionArguments(j, root) || hasI18nUsage;
 
   if (hasI18nUsage) {

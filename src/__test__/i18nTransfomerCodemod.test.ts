@@ -4,7 +4,7 @@ import { defineTest } from 'jscodeshift/dist/testUtils';
 describe('intlTransformerCodemod', () => {
   const FIXTURE_FILENAMES = [
     'Diacritics',
-    // 'ExpressionContainer',
+    'ExpressionContainer',
     'Functional',
     'Props',
     'Tsx',
