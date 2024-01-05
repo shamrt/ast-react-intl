@@ -1,12 +1,13 @@
-import { PropertyKind } from 'ast-types/gen/kinds';
 import {
   API,
   CallExpression,
   ConditionalExpression,
   FileInfo,
+  Identifier,
   JSCodeshift,
   JSXElement,
   JSXExpressionContainer,
+  ObjectProperty,
   Options,
 } from 'jscodeshift';
 import { Collection } from 'jscodeshift/src/Collection';
@@ -199,17 +200,21 @@ function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
       if (hasStringLiteralArguments(path)) {
         // eslint-disable-next-line no-param-reassign
         path.node.arguments = path.node.arguments.map((arg) => {
-          if (arg.type === 'StringLiteral' && arg.value) {
+          if (j.StringLiteral.check(arg) && arg.value) {
             hasI18nUsage = true;
             const [newText, newValues] = getTextWithPlaceholders(j, [arg]);
             return generateIntlCall(j, newText, newValues);
           }
 
-          if (arg.type === 'ObjectExpression') {
+          if (j.ObjectExpression.check(arg)) {
             // @ts-expect-error: Don't care that property 'argument' is missing in type 'CallExpression'
             // eslint-disable-next-line no-param-reassign
-            arg.properties = arg.properties.map((prop: PropertyKind) => {
-              if (prop.value && prop.value.type === 'StringLiteral') {
+            arg.properties = arg.properties.map((prop: ObjectProperty) => {
+              if (
+                looksLikeTextPropName((prop.key as Identifier).name) &&
+                prop.value &&
+                prop.value.type === 'StringLiteral'
+              ) {
                 hasI18nUsage = true;
                 const [newText, newValues] = getTextWithPlaceholders(j, [
                   prop.value,

@@ -11,6 +11,7 @@ describe('intlTransformerCodemod', () => {
     'Hooks',
     'HooksInlineExport',
     'Imported',
+    'MessageDescriptors',
     'NoChange',
     'Parameters',
     'PreExistingComponentI18n',
