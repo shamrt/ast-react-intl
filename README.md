@@ -30,7 +30,7 @@ import { FormattedMessage } from 'react-intl';
 
 const Simple = () => (
   <span>
-    <FormattedMessage id="simple" defaultMessage="My simple text" />
+    <FormattedMessage defaultMessage="My simple text" />
   </span>
 );
 ```
