@@ -4,14 +4,13 @@ import { useIntl } from 'react-intl';
 
 function Simple({ enabled, text }) {
   const intl = useIntl();
-
   return (<>
     <div>
       <span>{enabled ? intl.formatMessage({
-          defaultMessage: 'OK',
-        }) : intl.formatMessage({
-          defaultMessage: 'Not OK',
-        })}</span>
+        defaultMessage: 'OK'
+      }) : intl.formatMessage({
+        defaultMessage: 'Not OK'
+      })}</span>
       <span>{text && text}</span>
     </div>
     <div>

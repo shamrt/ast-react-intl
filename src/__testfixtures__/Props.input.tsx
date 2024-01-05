@@ -24,7 +24,7 @@ function Component123() {
       <Custom title="Custom name" />
       {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
       <Custom placeholder={'Custom name'} />
-      {/* <img alt={enabled ? 'OK' : 'Not OK'} /> */}
+      <img alt={enabled ? 'OK' : 'Not OK'} />
     </div>
   );
 }

@@ -6,7 +6,7 @@ type CustomProps = {
   title?: string;
   placeholder?: string;
 };
-function Custom({title, placeholder}: CustomProps) {
+function Custom({ title, placeholder }: CustomProps) {
   return (
     <div>
       <span>{title}</span>
@@ -16,7 +16,7 @@ function Custom({title, placeholder}: CustomProps) {
 }
 Custom.defaultProps = {
   title: 'Foo',
-  placeholder: 'Bar'
+  placeholder: 'Bar',
 };
 
 function Component123() {
@@ -32,11 +32,10 @@ function Component123() {
         defaultMessage: 'Custom name'
       })} />
       <img alt={enabled ? intl.formatMessage({
-            defaultMessage: 'OK',
-          }) : intl.formatMessage({
-            defaultMessage: 'Not OK',
-          })}
-      />
+        defaultMessage: 'OK'
+      }) : intl.formatMessage({
+        defaultMessage: 'Not OK'
+      })} />
     </div>)
   );
 }

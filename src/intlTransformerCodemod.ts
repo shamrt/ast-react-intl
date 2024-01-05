@@ -3,6 +3,7 @@ import { LiteralKind, PropertyKind } from 'ast-types/gen/kinds';
 import {
   API,
   CallExpression,
+  ConditionalExpression,
   FileInfo,
   Identifier,
   JSCodeshift,
@@ -309,10 +310,46 @@ function translateJsxProps(j: JSCodeshift, root: Collection<unknown>) {
   return hasI18nUsage;
 }
 
+// <span>{bool ? 'aaa' : 'bbb'}</span>
+// <Comp name={bool ? 'aaa' : 'bbb'} />
+function translateConditionalExpressions(
+  j: JSCodeshift,
+  root: Collection<unknown>,
+) {
+  let hasI18nUsage = false;
+
+  root
+    .find(j.JSXExpressionContainer)
+    .filter(
+      (path: NodePath<JSXExpressionContainer>) =>
+        path.node.expression &&
+        j.ConditionalExpression.check(path.node.expression) &&
+        (j.JSXElement.check(path.parent.node) ||
+          j.JSXAttribute.check(path.parent.node)),
+    )
+    // @ts-expect-error: We've just filtered for `path`s as conditional expressions
+    .forEach((path: NodePath<ConditionalExpression>) => {
+      const { expression } = path.value;
+      if (j.Literal.check(expression.consequent)) {
+        hasI18nUsage = true;
+        const text = expression.consequent.value;
+        expression.consequent = generateIntlCall(j, text);
+      }
+      if (j.Literal.check(expression.alternate)) {
+        hasI18nUsage = true;
+        const text = expression.alternate.value;
+        expression.alternate = generateIntlCall(j, text);
+      }
+    });
+
+  return hasI18nUsage;
+}
+
 // Yup.string().required('this field is required')
 // showSnackbar({ message: 'ok' })
 function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
   let hasI18nUsage = false;
+
   root
     .find(j.CallExpression)
     .filter(
@@ -379,6 +416,7 @@ function transform(file: FileInfo, api: API, options: Options) {
 
   hasI18nUsage = translateJsxProps(j, root) || hasI18nUsage;
   hasI18nUsage = translateJsxContent(j, root) || hasI18nUsage;
+  hasI18nUsage = translateConditionalExpressions(j, root) || hasI18nUsage;
   hasI18nUsage = translateFunctionArguments(j, root) || hasI18nUsage;
 
   if (hasI18nUsage) {
