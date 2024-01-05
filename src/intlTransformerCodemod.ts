@@ -291,6 +291,14 @@ function transform(file: FileInfo, api: API, options: Options) {
             }
           });
         } else if (j.FunctionDeclaration.check(exportDeclaration)) {
+          const existingUseIntlCalls = j(exportDeclaration.body).find(
+            j.CallExpression,
+            { callee: { name: 'useIntl' } },
+          );
+          if (existingUseIntlCalls.length > 0) {
+            return;
+          }
+
           exportDeclaration.body = j.blockStatement([
             createUseIntlCall(j),
             ...exportDeclaration.body.body,

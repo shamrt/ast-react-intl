@@ -258,14 +258,19 @@ export function addUseHookToFunctionBody(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   functions: Collection<any>,
 ) {
-  let hookFound = false;
   functions.forEach((n) => {
-    hookFound = true;
     const { body } = n.node;
+
+    const existingUseIntlCalls = j(body).find(j.CallExpression, {
+      callee: { name: 'useIntl' },
+    });
+    if (existingUseIntlCalls.length > 0) {
+      return;
+    }
+
     // eslint-disable-next-line no-param-reassign
     n.node.body = j.BlockStatement.check(body)
       ? j.blockStatement([createUseIntlCall(j), ...body.body])
       : j.blockStatement([createUseIntlCall(j), j.returnStatement(body)]);
   });
-  return hookFound;
 }
