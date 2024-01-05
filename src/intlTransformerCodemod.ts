@@ -25,7 +25,7 @@ import {
   canHandleAttribute,
   attributeLooksLikeText,
   findFunctionByIdentifier,
-} from './helpers';
+} from './helpers/jscodeshift';
 import { hasStringLiteralArguments } from './visitorChecks';
 
 type ImportStatementOptions = {
