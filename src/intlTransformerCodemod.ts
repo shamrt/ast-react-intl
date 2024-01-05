@@ -197,38 +197,36 @@ function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
     )
     .filter((path: NodePath<CallExpression>) => hasStringLiteralArguments(path))
     .forEach((path: NodePath<CallExpression, CallExpression>) => {
-      if (hasStringLiteralArguments(path)) {
-        // eslint-disable-next-line no-param-reassign
-        path.node.arguments = path.node.arguments.map((arg) => {
-          if (j.StringLiteral.check(arg) && arg.value) {
-            hasI18nUsage = true;
-            const [newText, newValues] = getTextWithPlaceholders(j, [arg]);
-            return generateIntlCall(j, newText, newValues);
-          }
+      // eslint-disable-next-line no-param-reassign
+      path.node.arguments = path.node.arguments.map((arg) => {
+        if (j.StringLiteral.check(arg) && arg.value) {
+          hasI18nUsage = true;
+          const [newText, newValues] = getTextWithPlaceholders(j, [arg]);
+          return generateIntlCall(j, newText, newValues);
+        }
 
-          if (j.ObjectExpression.check(arg)) {
-            // @ts-expect-error: Don't care that property 'argument' is missing in type 'CallExpression'
-            // eslint-disable-next-line no-param-reassign
-            arg.properties = arg.properties.map((prop: ObjectProperty) => {
-              if (
-                looksLikeTextPropName((prop.key as Identifier).name) &&
-                prop.value &&
-                prop.value.type === 'StringLiteral'
-              ) {
-                hasI18nUsage = true;
-                const [newText, newValues] = getTextWithPlaceholders(j, [
-                  prop.value,
-                ]);
-                // eslint-disable-next-line no-param-reassign
-                prop.value = generateIntlCall(j, newText, newValues);
-              }
-              return prop;
-            });
-          }
+        if (j.ObjectExpression.check(arg)) {
+          // @ts-expect-error: Don't care that property 'argument' is missing in type 'CallExpression'
+          // eslint-disable-next-line no-param-reassign
+          arg.properties = arg.properties.map((prop: ObjectProperty) => {
+            if (
+              looksLikeTextPropName((prop.key as Identifier).name) &&
+              prop.value &&
+              prop.value.type === 'StringLiteral'
+            ) {
+              hasI18nUsage = true;
+              const [newText, newValues] = getTextWithPlaceholders(j, [
+                prop.value,
+              ]);
+              // eslint-disable-next-line no-param-reassign
+              prop.value = generateIntlCall(j, newText, newValues);
+            }
+            return prop;
+          });
+        }
 
-          return arg;
-        });
-      }
+        return arg;
+      });
     });
 
   return hasI18nUsage;
