@@ -199,11 +199,7 @@ function translateFunctionArguments(j: JSCodeshift, root: Collection<unknown>) {
 }
 
 /**
- *
- * @param file The file to transform
- * @param api jscodeshift API
- * @param options Options passed to the transform
- * @returns
+ * Main function called by jscodeshift.
  */
 function transform(file: FileInfo, api: API, options: Options) {
   const j = api.jscodeshift; // alias the jscodeshift API
