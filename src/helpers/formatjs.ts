@@ -189,7 +189,7 @@ export const getTextWithPlaceholders = (
 };
 
 /**
- * Generates a call to `intl.formatMessage` with the given text and parameters.
+ * Generates a call to `intl#formatMessage` with the given text and parameters.
  */
 export function generateIntlCall(
   j: JSCodeshift,
@@ -206,11 +206,7 @@ export function generateIntlCall(
     intlCallParams.push(j.objectExpression(params));
   }
   return j.callExpression(
-    j.memberExpression(
-      j.identifier('intl'),
-      j.identifier('formatMessage'),
-      false,
-    ),
+    j.identifier('formatMessage'),
 
     intlCallParams,
   );
@@ -242,11 +238,17 @@ export function generateFormattedMessageComponent(
   );
 }
 
-/** Creates a `const intl = useIntl()` statement. */
+/** Creates a `const { formatMessage } = useIntl()` statement. */
 export function createUseIntlCall(j: JSCodeshift) {
+  const useIntlObjectProp = j.objectProperty(
+    j.identifier('formatMessage'),
+    j.identifier('formatMessage'),
+  );
+  useIntlObjectProp.shorthand = true;
+
   return j.variableDeclaration('const', [
     j.variableDeclarator(
-      j.identifier('intl'),
+      j.objectPattern([useIntlObjectProp]),
       j.callExpression(j.identifier('useIntl'), []),
     ),
   ]);

@@ -3,13 +3,16 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 
 function FunctionArguments() {
-  const intl = useIntl();
+  const {
+    formatMessage
+  } = useIntl();
+
   const typicalFunction = String('bar');
-  const functionWithStringArg = String(intl.formatMessage({
+  const functionWithStringArg = String(formatMessage({
     defaultMessage: 'My simple text'
   }));
   const functionWithObjectNonTextArg = String({ foo: 'bar' });
-  const functionWithObjectTextArg = String({ title: intl.formatMessage({
+  const functionWithObjectTextArg = String({ title: formatMessage({
     defaultMessage: 'My simple text'
   }) });
 

@@ -14,10 +14,10 @@ type Values = {
 };
 const UserForm = withFormik({
   validationSchema: yup.object().shape({
-    name: yup.string().required(intl.formatMessage({
+    name: yup.string().required(formatMessage({
       defaultMessage: 'Name is required'
     })),
-    email: yup.string().required(intl.formatMessage({
+    email: yup.string().required(formatMessage({
       defaultMessage: 'Email is required'
     })),
   }),
@@ -25,7 +25,7 @@ const UserForm = withFormik({
     const { props } = formikBag;
     const { showSnackbar } = props;
 
-    showSnackbar({ message: intl.formatMessage({
+    showSnackbar({ message: formatMessage({
       defaultMessage: 'User edited successfully!'
     }) });
   },

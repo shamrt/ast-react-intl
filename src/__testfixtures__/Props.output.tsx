@@ -20,23 +20,26 @@ Custom.defaultProps = {
 };
 
 function Component123() {
-  const intl = useIntl();
+  const {
+    formatMessage
+  } = useIntl();
+
   const enabled = true;
   return (
     (<div>
-      <Custom title={intl.formatMessage({
+      <Custom title={formatMessage({
         defaultMessage: 'Custom name'
       })} />
       {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
       <Custom
-        placeholder={intl.formatMessage({
+        placeholder={formatMessage({
           defaultMessage: 'Custom name'
         })}
         data-testid={enabled ? 'test-id' : undefined}
       />
-      <img alt={enabled ? intl.formatMessage({
+      <img alt={enabled ? formatMessage({
         defaultMessage: 'OK'
-      }) : intl.formatMessage({
+      }) : formatMessage({
         defaultMessage: 'Not OK'
       })} />
     </div>)

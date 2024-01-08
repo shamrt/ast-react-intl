@@ -3,18 +3,21 @@ import React from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 
 function Simple({ enabled, text }) {
-  const intl = useIntl();
+  const {
+    formatMessage
+  } = useIntl();
+
   return (<>
     <div>
-      <span>{enabled ? intl.formatMessage({
+      <span>{enabled ? formatMessage({
         defaultMessage: 'OK'
-      }) : intl.formatMessage({
+      }) : formatMessage({
         defaultMessage: 'Not OK'
       })}</span>
-      <span>{enabled ? intl.formatMessage({
+      <span>{enabled ? formatMessage({
         defaultMessage: 'OK'
       }) : null}</span>
-      <span>{enabled ? null : intl.formatMessage({
+      <span>{enabled ? null : formatMessage({
         defaultMessage: 'Not OK'
       })}</span>
       <span>{text && text}</span>

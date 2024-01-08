@@ -14,11 +14,14 @@ function Custom(props: CustomProps) {
 }
 
 function Simple() {
-  const intl = useIntl();
+  const {
+    formatMessage
+  } = useIntl();
+
   return (
     (<div>
       <span><FormattedMessage defaultMessage='Simple text' /></span>
-      <Custom title={intl.formatMessage({
+      <Custom title={formatMessage({
         defaultMessage: 'Custom name'
       })} />
     </div>)

@@ -3,8 +3,11 @@ import React, { useState } from "react";
 import { FormattedMessage, useIntl } from 'react-intl';
 
 export default function SiteFooter() {
-  const intl = useIntl();
-  const [text] = useState(intl.formatMessage({
+  const {
+    formatMessage
+  } = useIntl();
+
+  const [text] = useState(formatMessage({
     defaultMessage: 'Something something'
   }));
   return (<>
