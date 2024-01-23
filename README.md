@@ -2,7 +2,7 @@
 
 The objective of this tool is to make easy to migrate an existing codebase to use i18n with [react-intl](https://formatjs.io/docs/react-intl/) ([FormatJS](https://formatjs.io/)).
 
-It's an cleaned-up extension of [ast-react-intl](https://github.com/rwnoronha/ast-react-intl), which itself is based on [ast-i18n](https://github.com/sibelius/ast-i18n), which does the same thing for i18n.
+It's a cleaned-up extension of [ast-react-intl](https://github.com/rwnoronha/ast-react-intl), which itself is based on [ast-i18n](https://github.com/sibelius/ast-i18n), which does the same thing for i18n.
 
 ## How it works
 
